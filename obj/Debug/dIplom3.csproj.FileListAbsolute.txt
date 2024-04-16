@@ -1,0 +1,10 @@
+C:\Users\sergm\source\repos\dIplom3\bin\Debug\dIplom3.exe.config
+C:\Users\sergm\source\repos\dIplom3\bin\Debug\dIplom3.exe
+C:\Users\sergm\source\repos\dIplom3\bin\Debug\dIplom3.pdb
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.csproj.AssemblyReference.cache
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.Form1.resources
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.Properties.Resources.resources
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.csproj.GenerateResource.cache
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.csproj.CoreCompileInputs.cache
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.exe
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.pdb
