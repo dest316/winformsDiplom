@@ -30,7 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.cursorButton = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.soundSourceButton = new System.Windows.Forms.Button();
             this.wallButton = new System.Windows.Forms.Button();
             this.canvas = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
@@ -40,7 +40,7 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.cursorButton);
-            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.soundSourceButton);
             this.panel1.Controls.Add(this.wallButton);
             this.panel1.Location = new System.Drawing.Point(12, 35);
             this.panel1.Name = "panel1";
@@ -57,14 +57,15 @@
             this.cursorButton.UseVisualStyleBackColor = true;
             this.cursorButton.Click += new System.EventHandler(this.cursorButton_Click);
             // 
-            // button2
+            // soundSourceButton
             // 
-            this.button2.Location = new System.Drawing.Point(0, 59);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(57, 57);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Звук";
-            this.button2.UseVisualStyleBackColor = true;
+            this.soundSourceButton.Location = new System.Drawing.Point(0, 59);
+            this.soundSourceButton.Name = "soundSourceButton";
+            this.soundSourceButton.Size = new System.Drawing.Size(57, 57);
+            this.soundSourceButton.TabIndex = 2;
+            this.soundSourceButton.Text = "Звук";
+            this.soundSourceButton.UseVisualStyleBackColor = true;
+            this.soundSourceButton.Click += new System.EventHandler(this.soundSourceButton_Click);
             // 
             // wallButton
             // 
@@ -106,7 +107,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button wallButton;
         private System.Windows.Forms.PictureBox canvas;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button soundSourceButton;
         private System.Windows.Forms.Button cursorButton;
     }
 }
