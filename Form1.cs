@@ -76,36 +76,51 @@ namespace dIplom3
             }
             else if (activeTool != null && activeTool.Equals(cursorButton))
             {
-                foreach (var line in lines)
+                if (e.Button == MouseButtons.Left)
                 {
-                    if (line.HitTest(e.Location) && !selectedObjects.Contains(line))
+                    foreach (var line in lines)
                     {
-                        selectedObjects.Add(line);
-                        line.Selected = true;
-                        canvas.Invalidate();
-                        return;
+                        if (line.HitTest(e.Location) && !selectedObjects.Contains(line))
+                        {
+                            selectedObjects.Add(line);
+                            line.Selected = true;
+                            canvas.Invalidate();
+                            return;
+                        }
+                    }
+                    foreach (var source in soundSources)
+                    {
+                        if (source.HitTest(e.Location) && !selectedObjects.Contains(source))
+                        {
+                            selectedObjects.Add(source);
+                            source.Selected = true;
+                            canvas.Invalidate();
+                            return;
+                        }
+                    }
+                    selectedObjects.Clear();
+                    foreach (var line in lines)
+                    {
+                        line.Selected = false;
+                    }
+                    foreach (var source in soundSources)
+                    {
+                        source.Selected = false;
+                    }
+                    canvas.Invalidate();
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    foreach (var source in selectedObjects)
+                    {
+                        if (source is SoundSource)
+                        {
+                            var tmpSource = source as SoundSource;
+                            var editForm = new SoundSourceEditForm(tmpSource.parameters, tmpSource.name);
+                            editForm.Show();
+                        }
                     }
                 }
-                foreach(var source in soundSources)
-                {
-                    if (source.HitTest(e.Location) && !selectedObjects.Contains(source))
-                    {
-                        selectedObjects.Add(source);
-                        source.Selected = true;
-                        canvas.Invalidate();
-                        return;
-                    }
-                }
-                selectedObjects.Clear();
-                foreach (var line in lines)
-                {
-                    line.Selected = false;
-                }
-                foreach (var source in soundSources)
-                {
-                    source.Selected = false;
-                }
-                canvas.Invalidate();
             }
             else if (activeTool != null && activeTool.Equals(soundSourceButton))
             {
@@ -117,7 +132,7 @@ namespace dIplom3
                     int diameter = SoundSource.STANDART_DIAMETER;
                     g.DrawEllipse(pen, e.Location.X - diameter / 2, e.Location.Y - diameter / 2, diameter, diameter);
                     g.FillEllipse(brush, e.Location.X - diameter / 2, e.Location.Y - diameter / 2, diameter, diameter);
-                    soundSources.Add(new SoundSource(e.Location));
+                    soundSources.Add(new SoundSource(e.Location, $"soundSource{soundSources.Count}"));
                 }
             }
         }
@@ -264,11 +279,13 @@ namespace dIplom3
     {
         public bool Selected { get; set; } = false;
         public static int STANDART_DIAMETER = 10;
+        public string name { get; set; }
         private Point? center;
         private int diameter;
-        private Dictionary<string, string> parameters;
+        public Dictionary<string, string> parameters { get; set; }
         public SoundSource()
         {
+            name = null;
             center = null;
             diameter = 0;
             parameters = new Dictionary<string, string>();
@@ -282,8 +299,9 @@ namespace dIplom3
             SoundSource other = obj as SoundSource;
             return center.Equals(other.center);
         }
-        public SoundSource(Point? center)
+        public SoundSource(Point? center, string name)
         {
+            this.name = name;
             this.center = center;
             diameter = STANDART_DIAMETER;
             parameters = new Dictionary<string, string>();

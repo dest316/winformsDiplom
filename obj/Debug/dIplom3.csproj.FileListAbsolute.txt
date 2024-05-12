@@ -8,3 +8,4 @@ C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.csproj.GenerateResource.ca
 C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.csproj.CoreCompileInputs.cache
 C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.exe
 C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.pdb
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.SoundSourceEditForm.resources
