@@ -113,11 +113,11 @@ namespace dIplom3
                 {
                     foreach (var source in selectedObjects)
                     {
-                        if (source is SoundSource)
+                        if (source is SoundSource && source.HitTest(e.Location))
                         {
                             var tmpSource = source as SoundSource;
                             var editForm = new SoundSourceEditForm(tmpSource.parameters, tmpSource.name);
-                            editForm.Show();
+                            editForm.ShowDialog();
                         }
                     }
                 }
