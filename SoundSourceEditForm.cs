@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,6 @@ namespace dIplom3
             this.senderName = senderName;
             InitializeParamsTable(parameters);
         }
-        //починить удаление
         private void SSEF_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -38,7 +38,8 @@ namespace dIplom3
             {
                 TableLayoutPanelCellPosition position = paramsTable.GetPositionFromControl(focusedControl);
                 int rowToDelete = position.Row;
-                for (int column = 0; column < paramsTable.ColumnCount; column++)
+                parameters.Remove((paramsTable.GetControlFromPosition(0, rowToDelete) as Label).Text);
+                for (int column = paramsTable.ColumnCount; column >= 0; column--)
                 {
                     Control control = paramsTable.GetControlFromPosition(column, rowToDelete);
                     if (control != null)
@@ -46,18 +47,6 @@ namespace dIplom3
                         paramsTable.Controls.Remove(control);
                     }
                 }
-                for (int row = rowToDelete + 1; row < paramsTable.RowCount; row++)
-                {
-                    for (int column = 0; column < paramsTable.ColumnCount; column++)
-                    {
-                        Control control = paramsTable.GetControlFromPosition(column, row);
-                        if (control != null)
-                        {
-                            paramsTable.SetRow(control, row - 1);
-                        }
-                    }
-                }
-                paramsTable.RowCount--;
             }
         }
 
