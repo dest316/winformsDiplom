@@ -203,6 +203,16 @@ namespace dIplom3
             isDragging = false;
             startDragPoint = null;
         }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Импорт");
+        }
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Экспорт");
+        }
     }
     interface IModelObject
     {
