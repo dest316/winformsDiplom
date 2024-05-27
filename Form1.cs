@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -211,8 +213,23 @@ namespace dIplom3
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Экспорт");
+            Serializer serializer = new Serializer();
+            string head = serializer.createXmlHead();
+            serializer.Serialize("test.xml", head);
+            string previousFileContent = File.ReadAllText("test.xml");
+            int insertPosition = previousFileContent.IndexOf("</globalSettings>");
+            insertPosition += "</globalSettings>".Length;
+            string wallsString = "";
+            foreach (var wall in lines)
+            {
+                wallsString += (wall as Line).ConvertToXmlTag(serializer, 3);
+            }
+            string body = '\n' + serializer.createXmlTag("primitives", null, serializer.createXmlTag("walls", null, wallsString, 2), 1);
+            string newContentFile = previousFileContent.Insert(insertPosition, body);
+            serializer.Serialize("test.xml", newContentFile);
+            MessageBox.Show("Модель экспортирована в файл test.xml", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+        
     }
     interface IModelObject
     {
@@ -278,6 +295,22 @@ namespace dIplom3
         {
             startPoint = referencePoints.First();
             endPoint = referencePoints.Last();
+        }
+
+        private Dictionary<string, string> GetParameters()
+        {
+            var pars = new Dictionary<string, string>
+            {
+                { "startPoint", this.startPoint.ToString() },
+                { "endPoint", this.endPoint.ToString() },
+                { "type", this.type.ToString() },
+            };
+            return pars;
+        }
+
+        public string ConvertToXmlTag(Serializer serializer, int amountTab)
+        {
+            return serializer.createXmlTag("wall", GetParameters(), "", amountTab);
         }
     }
     public enum LineType

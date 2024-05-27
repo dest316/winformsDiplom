@@ -1,0 +1,25 @@
+<model>
+	<globalSettings>
+	
+	</globalSettings>
+	<primitives>
+			<walls>
+					<wall startPoint="{X=62,Y=82}" endPoint="{X=200,Y=76}" type="Straight">
+			
+			</wall>
+			<wall startPoint="{X=200,Y=77}" endPoint="{X=204,Y=131}" type="Straight">
+			
+			</wall>
+			<wall startPoint="{X=204,Y=131}" endPoint="{X=78,Y=145}" type="Straight">
+			
+			</wall>
+			<wall startPoint="{X=78,Y=144}" endPoint="{X=66,Y=82}" type="Straight">
+			
+			</wall>
+
+		</walls>
+
+	</primitives>
+
+
+</model>
