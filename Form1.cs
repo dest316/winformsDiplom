@@ -11,6 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace dIplom3
 {
@@ -208,7 +209,35 @@ namespace dIplom3
 
         private void importToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Импорт");
+            Clear();
+            string xmlText = File.ReadAllText("test.xml");
+            Serializer serializer = new Serializer();
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xmlText);
+            XmlNodeList wallNodes = doc.SelectNodes("//walls/wall");
+            if (wallNodes != null)
+            {
+                foreach (XmlNode wall in wallNodes)
+                {
+                    Point startPoint = serializer.stringToPoint(wall.Attributes["startPoint"].Value);
+                    Point endPoint = serializer.stringToPoint(wall.Attributes["endPoint"].Value);
+                    lines.Add(new Line(startPoint, endPoint, LineType.Straight));
+                }
+            }
+            XmlNodeList soundSourceNodes = doc.SelectNodes("//soundSources/soundSource");
+            if (soundSourceNodes != null)
+            {
+                foreach (XmlNode source in soundSourceNodes)
+                {
+                    Point center = serializer.stringToPoint(source.Attributes["center"].Value);
+                    string name = source.Attributes["name"].Value;
+                    int diameter = int.Parse(source.Attributes["diameter"].Value);
+                    Dictionary<string, string> parameters = serializer.stringToParametersDict(source.InnerText);
+                    soundSources.Add(new SoundSource(center, diameter, name, parameters));
+                }
+            }
+            canvas.Invalidate();
+            MessageBox.Show("Модель импортирована из файла test.xml", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -220,14 +249,28 @@ namespace dIplom3
             int insertPosition = previousFileContent.IndexOf("</globalSettings>");
             insertPosition += "</globalSettings>".Length;
             string wallsString = "";
+            string sourcesString = "";
             foreach (var wall in lines)
             {
                 wallsString += (wall as Line).ConvertToXmlTag(serializer, 3);
             }
-            string body = '\n' + serializer.createXmlTag("primitives", null, serializer.createXmlTag("walls", null, wallsString, 2), 1);
+            foreach (var source in soundSources)
+            {
+                sourcesString += source.ConvertToXmlTag(serializer, 3);
+            }
+            string body = '\n' + serializer.createXmlTag("primitives", null, $"{serializer.createXmlTag("walls", null, wallsString, 2)}\n{serializer.createXmlTag("soundSources", null, sourcesString, 2)}", 1);
             string newContentFile = previousFileContent.Insert(insertPosition, body);
             serializer.Serialize("test.xml", newContentFile);
+
             MessageBox.Show("Модель экспортирована в файл test.xml", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void Clear()
+        {
+            lines.Clear();
+            soundSources.Clear();
+            previousPoint = null;
+            selectedObjects.Clear();
         }
         
     }
@@ -255,7 +298,9 @@ namespace dIplom3
             this.startPoint = startPoint;
             this.endPoint = endPoint;
             this.type = type;
+            
         }
+        
         public override bool Equals(object obj)
         {
             // Проверяем, является ли obj объектом типа Line
@@ -333,6 +378,13 @@ namespace dIplom3
             diameter = 0;
             parameters = new Dictionary<string, string>();
         }
+        public SoundSource(Point? center, int diameter, string name, Dictionary<string, string> parameters)
+        {
+            this.name = name;
+            this.center = center;
+            this.diameter = diameter;
+            this.parameters = parameters;
+        }
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is SoundSource))
@@ -373,6 +425,21 @@ namespace dIplom3
         public void SetReferencePoints(List<Point> referencePoints)
         {
             center = referencePoints.First();
+        }
+
+        private Dictionary<string, string> GetParameters()
+        {
+            var pars = new Dictionary<string, string>
+            {
+                { "name", this.name },
+                { "diameter", this.diameter.ToString() },
+                { "center", this.center.Value.ToString() }
+            };
+            return pars;
+        }
+        public string ConvertToXmlTag(Serializer serializer, int amountTag)
+        {
+            return serializer.createXmlTag("soundSource", GetParameters(), $"{serializer.dictToString(parameters)}", amountTag);
         }
     }
 }

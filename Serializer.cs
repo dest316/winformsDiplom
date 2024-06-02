@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.IO;
+using System.Drawing;
 
 namespace dIplom3
 {
@@ -39,6 +40,76 @@ namespace dIplom3
             string result = createXmlTag("model", null, gs, 0);
             return result;
         }
+
+        public string dictToString(Dictionary<string, string> dict)
+        {
+            List<string> elements = new List<string>();
+            foreach (var kvp in dict)
+            {
+                elements.Add($"{kvp.Key}${kvp.Value}");
+            }
+            return String.Join(";", elements.ToArray());
+        }
+        public Point stringToPoint(string str)
+        {
+            str = str.Trim('{', '}');
+            string[] parts = str.Split(',', '=');
+            int x = 0;
+            int y = 0;
+            if (parts.Length == 4)
+            {
+                if (int.TryParse(parts[1], out x) && int.TryParse(parts[3], out y))
+                {
+                    return new Point(x, y);
+                }
+            }
+            throw new FormatException("Неверный формат строки для преобразования в точку");
+            //Regex regex = new Regex(@"^(?<x>\d+),\s*(?<y>\d+)$");
+            //Match match = regex.Match(str);
+
+            //if (match.Success)
+            //{
+            //    // Извлекаем значения X и Y из строки
+            //    int x = int.Parse(match.Groups["x"].Value);
+            //    int y = int.Parse(match.Groups["y"].Value);
+
+            //    // Возвращаем новый экземпляр Point
+            //    return new Point(x, y);
+            //}
+            //else
+            //{
+            //    throw new FormatException("Invalid format for Point string");
+            //}
+        }
+        public Dictionary<string, string> stringToParametersDict(string str)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            if (str == null || str == "") 
+            { 
+                return result; 
+            }
+            string[] pairs = str.Split(';');
+            foreach (string pair in pairs)
+            {
+                // Разделяем пару на ключ и значение
+                string[] keyValue = pair.Split('$');
+
+                // Проверяем, что у нас действительно есть пара ключ-значение
+                if (keyValue.Length == 2)
+                {
+                    string key = keyValue[0];
+                    string value = keyValue[1];
+
+                    // Добавляем ключ и значение в словарь
+                    result[key] = value;
+                }
+                else
+                {
+                    throw new FormatException("Invalid format for key-value pair: " + pair);
+                }
+                
+            }
+            return result;
+        }
     }
-    
 }
