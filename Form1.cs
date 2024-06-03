@@ -209,60 +209,97 @@ namespace dIplom3
 
         private void importToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Clear();
-            string xmlText = File.ReadAllText("test.xml");
-            Serializer serializer = new Serializer();
-            XmlDocument doc = new XmlDocument();
-            doc.LoadXml(xmlText);
-            XmlNodeList wallNodes = doc.SelectNodes("//walls/wall");
-            if (wallNodes != null)
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                foreach (XmlNode wall in wallNodes)
+                openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                openFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    Point startPoint = serializer.stringToPoint(wall.Attributes["startPoint"].Value);
-                    Point endPoint = serializer.stringToPoint(wall.Attributes["endPoint"].Value);
-                    lines.Add(new Line(startPoint, endPoint, LineType.Straight));
+                    string filePath = openFileDialog.FileName;
+                    try
+                    {
+                        Clear();
+                        string xmlText = File.ReadAllText(filePath);
+                        Serializer serializer = new Serializer();
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(xmlText);
+                        XmlNodeList wallNodes = doc.SelectNodes("//walls/wall");
+                        if (wallNodes != null)
+                        {
+                            foreach (XmlNode wall in wallNodes)
+                            {
+                                Point startPoint = serializer.stringToPoint(wall.Attributes["startPoint"].Value);
+                                Point endPoint = serializer.stringToPoint(wall.Attributes["endPoint"].Value);
+                                lines.Add(new Line(startPoint, endPoint, LineType.Straight));
+                            }
+                        }
+                        XmlNodeList soundSourceNodes = doc.SelectNodes("//soundSources/soundSource");
+                        if (soundSourceNodes != null)
+                        {
+                            foreach (XmlNode source in soundSourceNodes)
+                            {
+                                Point center = serializer.stringToPoint(source.Attributes["center"].Value);
+                                string name = source.Attributes["name"].Value;
+                                int diameter = int.Parse(source.Attributes["diameter"].Value);
+                                Dictionary<string, string> parameters = serializer.stringToParametersDict(source.InnerText);
+                                soundSources.Add(new SoundSource(center, diameter, name, parameters));
+                            }
+                        }
+                        canvas.Invalidate();
+                        MessageBox.Show($"Модель импортирована из файла {filePath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка при загрузке файла {filePath}", "Доступ запрещен", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
-            XmlNodeList soundSourceNodes = doc.SelectNodes("//soundSources/soundSource");
-            if (soundSourceNodes != null)
-            {
-                foreach (XmlNode source in soundSourceNodes)
-                {
-                    Point center = serializer.stringToPoint(source.Attributes["center"].Value);
-                    string name = source.Attributes["name"].Value;
-                    int diameter = int.Parse(source.Attributes["diameter"].Value);
-                    Dictionary<string, string> parameters = serializer.stringToParametersDict(source.InnerText);
-                    soundSources.Add(new SoundSource(center, diameter, name, parameters));
-                }
-            }
-            canvas.Invalidate();
-            MessageBox.Show("Модель импортирована из файла test.xml", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            
         }
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Serializer serializer = new Serializer();
-            string head = serializer.createXmlHead();
-            serializer.Serialize("test.xml", head);
-            string previousFileContent = File.ReadAllText("test.xml");
-            int insertPosition = previousFileContent.IndexOf("</globalSettings>");
-            insertPosition += "</globalSettings>".Length;
-            string wallsString = "";
-            string sourcesString = "";
-            foreach (var wall in lines)
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                wallsString += (wall as Line).ConvertToXmlTag(serializer, 3);
-            }
-            foreach (var source in soundSources)
-            {
-                sourcesString += source.ConvertToXmlTag(serializer, 3);
-            }
-            string body = '\n' + serializer.createXmlTag("primitives", null, $"{serializer.createXmlTag("walls", null, wallsString, 2)}\n{serializer.createXmlTag("soundSources", null, sourcesString, 2)}", 1);
-            string newContentFile = previousFileContent.Insert(insertPosition, body);
-            serializer.Serialize("test.xml", newContentFile);
+                openFileDialog.InitialDirectory = AppDomain.CurrentDomain.BaseDirectory;
+                openFileDialog.Filter = "XML files (*.xml)|*.xml|All files (*.*)|*.*";
+                openFileDialog.FilterIndex = 1;
+                openFileDialog.RestoreDirectory = true;
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    try
+                    {
+                        Serializer serializer = new Serializer();
+                        string head = serializer.createXmlHead();
+                        serializer.Serialize(filePath, head);
+                        string previousFileContent = File.ReadAllText(filePath);
+                        int insertPosition = previousFileContent.IndexOf("</globalSettings>");
+                        insertPosition += "</globalSettings>".Length;
+                        string wallsString = "";
+                        string sourcesString = "";
+                        foreach (var wall in lines)
+                        {
+                            wallsString += (wall as Line).ConvertToXmlTag(serializer, 3);
+                        }
+                        foreach (var source in soundSources)
+                        {
+                            sourcesString += source.ConvertToXmlTag(serializer, 3);
+                        }
+                        string body = '\n' + serializer.createXmlTag("primitives", null, $"{serializer.createXmlTag("walls", null, wallsString, 2)}\n{serializer.createXmlTag("soundSources", null, sourcesString, 2)}", 1);
+                        string newContentFile = previousFileContent.Insert(insertPosition, body);
+                        serializer.Serialize(filePath, newContentFile);
 
-            MessageBox.Show("Модель экспортирована в файл test.xml", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show($"Модель экспортирована в файл {filePath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка при загрузке файла {filePath}", "Доступ запрещен", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
 
         private void Clear()

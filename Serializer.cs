@@ -64,22 +64,6 @@ namespace dIplom3
                 }
             }
             throw new FormatException("Неверный формат строки для преобразования в точку");
-            //Regex regex = new Regex(@"^(?<x>\d+),\s*(?<y>\d+)$");
-            //Match match = regex.Match(str);
-
-            //if (match.Success)
-            //{
-            //    // Извлекаем значения X и Y из строки
-            //    int x = int.Parse(match.Groups["x"].Value);
-            //    int y = int.Parse(match.Groups["y"].Value);
-
-            //    // Возвращаем новый экземпляр Point
-            //    return new Point(x, y);
-            //}
-            //else
-            //{
-            //    throw new FormatException("Invalid format for Point string");
-            //}
         }
         public Dictionary<string, string> stringToParametersDict(string str)
         {
