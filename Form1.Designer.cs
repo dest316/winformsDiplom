@@ -37,6 +37,10 @@
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.windowButton = new System.Windows.Forms.Button();
+            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.doorButton = new System.Windows.Forms.Button();
+            this.interierObjectButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -44,19 +48,22 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.interierObjectButton);
+            this.panel1.Controls.Add(this.doorButton);
+            this.panel1.Controls.Add(this.windowButton);
             this.panel1.Controls.Add(this.cursorButton);
             this.panel1.Controls.Add(this.soundSourceButton);
             this.panel1.Controls.Add(this.wallButton);
             this.panel1.Location = new System.Drawing.Point(12, 35);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(58, 435);
+            this.panel1.Size = new System.Drawing.Size(98, 435);
             this.panel1.TabIndex = 0;
             // 
             // cursorButton
             // 
             this.cursorButton.Location = new System.Drawing.Point(1, 0);
             this.cursorButton.Name = "cursorButton";
-            this.cursorButton.Size = new System.Drawing.Size(57, 55);
+            this.cursorButton.Size = new System.Drawing.Size(94, 57);
             this.cursorButton.TabIndex = 2;
             this.cursorButton.Text = "Выделение";
             this.cursorButton.UseVisualStyleBackColor = true;
@@ -64,9 +71,9 @@
             // 
             // soundSourceButton
             // 
-            this.soundSourceButton.Location = new System.Drawing.Point(1, 59);
+            this.soundSourceButton.Location = new System.Drawing.Point(1, 63);
             this.soundSourceButton.Name = "soundSourceButton";
-            this.soundSourceButton.Size = new System.Drawing.Size(57, 57);
+            this.soundSourceButton.Size = new System.Drawing.Size(94, 57);
             this.soundSourceButton.TabIndex = 2;
             this.soundSourceButton.Text = "Звук";
             this.soundSourceButton.UseVisualStyleBackColor = true;
@@ -74,9 +81,9 @@
             // 
             // wallButton
             // 
-            this.wallButton.Location = new System.Drawing.Point(1, 122);
+            this.wallButton.Location = new System.Drawing.Point(1, 126);
             this.wallButton.Name = "wallButton";
-            this.wallButton.Size = new System.Drawing.Size(57, 53);
+            this.wallButton.Size = new System.Drawing.Size(94, 57);
             this.wallButton.TabIndex = 0;
             this.wallButton.Text = "Стена\r\n";
             this.wallButton.UseVisualStyleBackColor = true;
@@ -86,9 +93,9 @@
             // 
             this.canvas.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.canvas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.canvas.Location = new System.Drawing.Point(354, 35);
+            this.canvas.Location = new System.Drawing.Point(212, 35);
             this.canvas.Name = "canvas";
-            this.canvas.Size = new System.Drawing.Size(753, 435);
+            this.canvas.Size = new System.Drawing.Size(1480, 878);
             this.canvas.TabIndex = 1;
             this.canvas.TabStop = false;
             this.canvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvasMouseDown);
@@ -122,18 +129,52 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.модельToolStripMenuItem});
+            this.модельToolStripMenuItem,
+            this.настройкиToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1146, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1902, 28);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // windowButton
+            // 
+            this.windowButton.Location = new System.Drawing.Point(1, 189);
+            this.windowButton.Name = "windowButton";
+            this.windowButton.Size = new System.Drawing.Size(94, 57);
+            this.windowButton.TabIndex = 3;
+            this.windowButton.Text = "Окно";
+            this.windowButton.UseVisualStyleBackColor = true;
+            // 
+            // настройкиToolStripMenuItem
+            // 
+            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
+            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(98, 26);
+            this.настройкиToolStripMenuItem.Text = "Настройки";
+            // 
+            // doorButton
+            // 
+            this.doorButton.Location = new System.Drawing.Point(1, 253);
+            this.doorButton.Name = "doorButton";
+            this.doorButton.Size = new System.Drawing.Size(94, 57);
+            this.doorButton.TabIndex = 4;
+            this.doorButton.Text = "Дверь";
+            this.doorButton.UseVisualStyleBackColor = true;
+            // 
+            // interierObjectButton
+            // 
+            this.interierObjectButton.Location = new System.Drawing.Point(1, 316);
+            this.interierObjectButton.Name = "interierObjectButton";
+            this.interierObjectButton.Size = new System.Drawing.Size(94, 57);
+            this.interierObjectButton.TabIndex = 5;
+            this.interierObjectButton.Text = "Интерьер";
+            this.interierObjectButton.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1146, 504);
+            this.ClientSize = new System.Drawing.Size(1902, 1033);
             this.Controls.Add(this.canvas);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
@@ -160,6 +201,10 @@
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem;
         private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.Button windowButton;
+        private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
+        private System.Windows.Forms.Button doorButton;
+        private System.Windows.Forms.Button interierObjectButton;
     }
 }
 

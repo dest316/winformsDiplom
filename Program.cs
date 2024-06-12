@@ -16,7 +16,10 @@ namespace dIplom3
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            var form = new Form1();
+            form.Width = 1920;
+            form.Height = 1080;
+            Application.Run(form);
         }
     }
 }

@@ -29,6 +29,7 @@ namespace dIplom3
             InitializeComponent();
             canvas.MouseClick += canvasClick;
             canvas.Paint += canvasPaint;
+            
             cursorButton.KeyDown += Form1_KeyDown;
         }
 
@@ -49,6 +50,7 @@ namespace dIplom3
 
         private void canvasPaint(object sender, PaintEventArgs e)
         {
+            CreateMash(e.Graphics, 1);
             foreach (var line in lines)
             {
                 line.Draw(e.Graphics);
@@ -127,7 +129,6 @@ namespace dIplom3
             }
             else if (activeTool != null && activeTool.Equals(soundSourceButton))
             {
-                // Добавить проверку на коллизии нового источника звука с уже существующими (см chatGPT)
                 using (Graphics g = canvas.CreateGraphics())
                 {
                     Brush brush = Brushes.Green;
@@ -309,7 +310,27 @@ namespace dIplom3
             previousPoint = null;
             selectedObjects.Clear();
         }
-        
+
+        private void CreateMash(Graphics g, int scaleCoeff)
+        {
+            var canvasWidth = canvas.Width;
+            var canvasHeight = canvas.Height;
+            Point canvasStartPoint = canvas.Location;
+            var cellSide = Math.Min(canvasWidth, canvasHeight) / 10;
+            int label = 0;
+            for (int i = 0; i < canvasWidth; i += cellSide)
+            {
+                g.DrawLine(Pens.DarkGray, new Point(i + cellSide, 0), new Point(i + cellSide, 0 + canvasHeight));
+                g.DrawString((++label * scaleCoeff).ToString(), new Font("Arial", 10), Brushes.DarkGray, new PointF(i + cellSide, 10)); 
+            }
+            label = 0;
+            for (int i = 0; i < canvasHeight; i += cellSide)
+            {
+                g.DrawLine(Pens.DarkGray, new Point(0, i + cellSide), new Point(0 + canvasWidth, i + cellSide));
+                g.DrawString((++label * scaleCoeff).ToString(), new Font("Arial", 10), Brushes.DarkGray, new PointF(10, i + cellSide));
+            }
+            Debug.WriteLine(canvas.Location.ToString());
+        }
     }
     interface IModelObject
     {
