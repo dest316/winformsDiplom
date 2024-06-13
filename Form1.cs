@@ -24,9 +24,11 @@ namespace dIplom3
         private List<IModelObject> selectedObjects = new List<IModelObject>();
         private bool isDragging = false;
         private Point? startDragPoint = null;
+        private int cellSide;
         public Form1()
         {
             InitializeComponent();
+            cellSide = Math.Min(canvas.Width, canvas.Height) / 10;
             canvas.MouseClick += canvasClick;
             canvas.Paint += canvasPaint;
             
@@ -53,7 +55,7 @@ namespace dIplom3
             CreateMash(e.Graphics, 1);
             foreach (var line in lines)
             {
-                line.Draw(e.Graphics);
+                (line as Line).Draw(e.Graphics, cellSide);
             }
             foreach (var source in soundSources)
             {
@@ -75,6 +77,7 @@ namespace dIplom3
                     {
                         g.DrawLine(Pens.Black, previousPoint.Value, e.Location);
                         lines.Add(new Line(previousPoint, e.Location, LineType.Straight));
+                        canvas.Invalidate();
                         previousPoint = null;
                     }
                 }
@@ -329,9 +332,9 @@ namespace dIplom3
                 g.DrawLine(Pens.DarkGray, new Point(0, i + cellSide), new Point(0 + canvasWidth, i + cellSide));
                 g.DrawString((++label * scaleCoeff).ToString(), new Font("Arial", 10), Brushes.DarkGray, new PointF(10, i + cellSide));
             }
-            Debug.WriteLine(canvas.Location.ToString());
         }
     }
+
     interface IModelObject
     {
         void Draw(Graphics g);
@@ -383,6 +386,21 @@ namespace dIplom3
                             point.Y <= Math.Max(startPoint.Value.Y, endPoint.Value.Y);
             return distance <= HitRange && insideRectangle;
         }
+        private void DrawLength(Graphics g, int cellSide)
+        {
+            PointF center = new PointF(Math.Abs(endPoint.Value.X + startPoint.Value.X) / 2, Math.Abs(endPoint.Value.Y + startPoint.Value.Y) / 2);
+            var length = Math.Round(Math.Sqrt(Math.Pow(endPoint.Value.X - startPoint.Value.X, 2) + Math.Pow(endPoint.Value.Y - startPoint.Value.Y, 2)) / cellSide, 3);
+            g.DrawString(length.ToString(), new Font("Arial", 10), Brushes.Black, new PointF(center.X + 10, center.Y + 10));
+            Debug.WriteLine(length.ToString());
+        }
+        public void Draw(Graphics g, int cellSide)
+        {
+            Pen pen = Selected ? Pens.Red : Pens.Black;
+            DrawLength(g, cellSide);
+            g.DrawLine(pen, startPoint.Value, endPoint.Value);
+            
+        }
+
         public void Draw(Graphics g)
         {
             Pen pen = Selected ? Pens.Red : Pens.Black;
