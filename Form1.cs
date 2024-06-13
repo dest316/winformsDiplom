@@ -75,8 +75,14 @@ namespace dIplom3
                 {
                     using (Graphics g = canvas.CreateGraphics())
                     {
-                        g.DrawLine(Pens.Black, previousPoint.Value, e.Location);
-                        lines.Add(new Line(previousPoint, e.Location, LineType.Straight));
+                        Point finishPoint = e.Location; 
+                        if (Control.ModifierKeys == Keys.Shift)
+                        {
+                            string leanableAxis = Math.Abs(previousPoint.Value.X - e.Location.X) <= Math.Abs(previousPoint.Value.Y - e.Location.Y) ? "x" : "y";
+                            finishPoint = leanableAxis == "x" ? new Point(previousPoint.Value.X, e.Location.Y) : new Point(e.Location.X, previousPoint.Value.Y);
+                        }
+                        g.DrawLine(Pens.Black, previousPoint.Value, finishPoint);
+                        lines.Add(new Line(previousPoint, finishPoint, LineType.Straight));
                         canvas.Invalidate();
                         previousPoint = null;
                     }
