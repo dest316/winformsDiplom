@@ -20,6 +20,9 @@ namespace dIplom3
         private Control activeTool;
         private Point? previousPoint = null;
         private List<IModelObject> lines = new List<IModelObject>();
+        private List<Line> doors = new List<Line>();
+        private List<Line> windows = new List<Line>();
+        // private List<object> interierObject = new List<object>();
         private List<SoundSource> soundSources = new List<SoundSource>();
         private List<IModelObject> selectedObjects = new List<IModelObject>();
         private bool isDragging = false;
@@ -31,7 +34,6 @@ namespace dIplom3
             cellSide = Math.Min(canvas.Width, canvas.Height) / 10;
             canvas.MouseClick += canvasClick;
             canvas.Paint += canvasPaint;
-            
             cursorButton.KeyDown += Form1_KeyDown;
         }
 
@@ -67,19 +69,29 @@ namespace dIplom3
         {
             if (activeTool != null && activeTool.Equals(wallButton))  
             {
+                Point location = e.Location;
+                foreach(var line in lines)
+                {
+                    var tmp = (line as Line).HitExtremePointsTest(e.Location);
+                    if (tmp != null)
+                    {
+                        location = tmp.Value;
+                        break;
+                    }
+                }
                 if (previousPoint is null)
                 {
-                    previousPoint = e.Location;
+                    previousPoint = location;
                 }
                 else
                 {
                     using (Graphics g = canvas.CreateGraphics())
                     {
-                        Point finishPoint = e.Location; 
+                        Point finishPoint = location; 
                         if (Control.ModifierKeys == Keys.Shift)
                         {
-                            string leanableAxis = Math.Abs(previousPoint.Value.X - e.Location.X) <= Math.Abs(previousPoint.Value.Y - e.Location.Y) ? "x" : "y";
-                            finishPoint = leanableAxis == "x" ? new Point(previousPoint.Value.X, e.Location.Y) : new Point(e.Location.X, previousPoint.Value.Y);
+                            string leanableAxis = Math.Abs(previousPoint.Value.X - location.X) <= Math.Abs(previousPoint.Value.Y - location.Y) ? "x" : "y";
+                            finishPoint = leanableAxis == "x" ? new Point(previousPoint.Value.X, location.Y) : new Point(location.X, previousPoint.Value.Y);
                         }
                         g.DrawLine(Pens.Black, previousPoint.Value, finishPoint);
                         lines.Add(new Line(previousPoint, finishPoint, LineType.Straight));
@@ -147,6 +159,18 @@ namespace dIplom3
                     g.FillEllipse(brush, e.Location.X - diameter / 2, e.Location.Y - diameter / 2, diameter, diameter);
                     soundSources.Add(new SoundSource(e.Location, $"soundSource{soundSources.Count}"));
                 }
+            }
+            else if (activeTool != null && activeTool.Equals(doorButton))
+            {
+
+            }
+            else if (activeTool != null && activeTool.Equals(windowButton))
+            {
+
+            }
+            else if (activeTool != null && activeTool.Equals(interierObjectButton))
+            {
+
             }
         }
 
@@ -392,6 +416,20 @@ namespace dIplom3
                             point.Y <= Math.Max(startPoint.Value.Y, endPoint.Value.Y);
             return distance <= HitRange && insideRectangle;
         }
+
+        public Point? HitExtremePointsTest(Point point)
+        {
+            foreach (var p in GetReferencePoints())
+            {
+                const int HitRange = 5;
+                if (Math.Sqrt(Math.Pow(point.X - p.X, 2) + Math.Pow(point.Y - p.Y, 2)) < HitRange)
+                {
+                    return p;
+                }
+            }
+            return null;
+        }
+
         private void DrawLength(Graphics g, int cellSide)
         {
             PointF center = new PointF(Math.Abs(endPoint.Value.X + startPoint.Value.X) / 2, Math.Abs(endPoint.Value.Y + startPoint.Value.Y) / 2);
