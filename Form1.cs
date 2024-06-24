@@ -28,9 +28,23 @@ namespace dIplom3
         private bool isDragging = false;
         private Point? startDragPoint = null;
         private int cellSide;
+        private DatabaseManager databaseManager;
+        private DataTable materialsInfo;
+
         public Form1()
         {
             InitializeComponent();
+            try
+            {
+                databaseManager = new DatabaseManager("localhost", "contester", "root", "root");
+                databaseManager.OpenConnection();
+                materialsInfo = databaseManager.ExecuteQuery("SELECT * FROM materials;");
+                databaseManager.CloseConnection();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             cellSide = Math.Min(canvas.Width, canvas.Height) / 10;
             canvas.MouseClick += canvasClick;
             canvas.Paint += canvasPaint;
@@ -435,8 +449,8 @@ namespace dIplom3
             PointF center = new PointF(Math.Abs(endPoint.Value.X + startPoint.Value.X) / 2, Math.Abs(endPoint.Value.Y + startPoint.Value.Y) / 2);
             var length = Math.Round(Math.Sqrt(Math.Pow(endPoint.Value.X - startPoint.Value.X, 2) + Math.Pow(endPoint.Value.Y - startPoint.Value.Y, 2)) / cellSide, 3);
             g.DrawString(length.ToString(), new Font("Arial", 10), Brushes.Black, new PointF(center.X + 10, center.Y + 10));
-            Debug.WriteLine(length.ToString());
         }
+
         public void Draw(Graphics g, int cellSide)
         {
             Pen pen = Selected ? Pens.Red : Pens.Black;
