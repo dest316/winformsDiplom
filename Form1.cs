@@ -43,12 +43,17 @@ namespace dIplom3
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show($"Не удалось установить соединение с базой данных. Сообщение об ошибке: {ex.Message}");
             }
             cellSide = Math.Min(canvas.Width, canvas.Height) / 10;
             canvas.MouseClick += canvasClick;
             canvas.Paint += canvasPaint;
             cursorButton.KeyDown += Form1_KeyDown;
+            materialsInfo = new DataTable();
+            materialsInfo.Columns.Add("material_name", typeof(string));
+            materialsInfo.Rows.Add("Бетон");
+            materialsInfo.Rows.Add("Кирпич");
+            materialsInfo.Rows.Add("Дерево");
         }
 
         private void ResetToolsBackColor()
@@ -157,6 +162,15 @@ namespace dIplom3
                         {
                             var tmpSource = source as SoundSource;
                             var editForm = new SoundSourceEditForm(tmpSource.parameters, tmpSource.name);
+                            editForm.ShowDialog();
+                        }
+                    }
+                    foreach (var wall in lines)
+                    {
+                        if (wall is Line && wall.HitTest(e.Location) && wall.Selected)
+                        {
+                            var tmpWall = wall as Line;
+                            var editForm = new WallEditForm(tmpWall, materialsInfo);
                             editForm.ShowDialog();
                         }
                     }
@@ -393,6 +407,8 @@ namespace dIplom3
         private Point? endPoint;
         private LineType type;
         public bool Selected { get; set; } = false;
+        public string MaterialName { get; set; } = "Не выбрано";
+
         public Line()
         {
             startPoint = null;
@@ -402,10 +418,12 @@ namespace dIplom3
         {
             this.startPoint = startPoint;
             this.endPoint = endPoint;
-            this.type = type;
-            
+            this.type = type;   
         }
-        
+        public Line(Point? startPoint, Point? endPoint, LineType type, string materialName): this(startPoint, endPoint, type)
+        {
+            MaterialName = materialName;
+        }
         public override bool Equals(object obj)
         {
             // Проверяем, является ли obj объектом типа Line
