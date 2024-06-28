@@ -67,6 +67,7 @@
             this.interierObjectButton.TabIndex = 5;
             this.interierObjectButton.Text = "Интерьер";
             this.interierObjectButton.UseVisualStyleBackColor = true;
+            this.interierObjectButton.Click += new System.EventHandler(this.wallButtonClick);
             // 
             // doorButton
             // 

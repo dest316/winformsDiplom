@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace dIplom3
         private List<IModelObject> lines = new List<IModelObject>();
         private List<Line> doors = new List<Line>();
         private List<Line> windows = new List<Line>();
-        // private List<object> interierObject = new List<object>();
+        private List<InteriorObject> interierObjects = new List<InteriorObject>();
         private List<SoundSource> soundSources = new List<SoundSource>();
         private List<IModelObject> selectedObjects = new List<IModelObject>();
         private bool isDragging = false;
@@ -33,6 +34,7 @@ namespace dIplom3
         private int cellSide;
         private DatabaseManager databaseManager;
         private DataTable materialsInfo;
+        private InteriorObject lastInteriorObject = null;
 
         public Form1()
         {
@@ -94,6 +96,14 @@ namespace dIplom3
             foreach (var door in doors)
             {
                 door.Draw(e.Graphics);
+            }
+            foreach (var window in windows)
+            {
+                window.Draw(e.Graphics);
+            }
+            foreach (var interiorObject in interierObjects)
+            {
+                interiorObject.Draw(e.Graphics);
             }
         }
 
@@ -237,20 +247,40 @@ namespace dIplom3
                         else
                         {
                             g.DrawLine(Pens.Blue, previousPoint.Value, finishPoint);
-                            doors.Add(new Window(previousPoint, finishPoint, LineType.Straight));
+                            windows.Add(new Window(previousPoint, finishPoint, LineType.Straight));
                         }
                         canvas.Invalidate();
                         previousPoint = null;
                     }
                 }
             }
-            else if (activeTool != null && activeTool.Equals(windowButton))
-            {
-
-            }
             else if (activeTool != null && activeTool.Equals(interierObjectButton))
             {
-
+                if (lastInteriorObject is null)
+                {
+                    lastInteriorObject = new InteriorObject();
+                    lastInteriorObject.AddReferancePoint(e.Location);
+                    interierObjects.Add(lastInteriorObject);
+                }
+                else
+                {
+                    
+                    
+                    Point newPoint = e.Location;
+                    if (CalculateDistance(lastInteriorObject.referancePoints.First(), newPoint) < 5)
+                    {
+                        newPoint = lastInteriorObject.referancePoints.First();
+                    }
+                    lastInteriorObject.AddReferancePoint(newPoint);
+                        
+                    canvas.Invalidate();
+                    if (lastInteriorObject.referancePoints.First() == lastInteriorObject.referancePoints.Last())
+                    {
+                        lastInteriorObject = null;
+                    }
+                    
+                    
+                }
             }
         }
 
@@ -369,8 +399,7 @@ namespace dIplom3
                         MessageBox.Show($"Ошибка при загрузке файла {filePath}", "Доступ запрещен", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-            }
-            
+            }          
         }
 
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
@@ -443,8 +472,12 @@ namespace dIplom3
                 g.DrawString((++label * scaleCoeff).ToString(), new Font("Arial", 10), Brushes.DarkGray, new PointF(10, i + cellSide));
             }
         }
-
-        
+        public static double CalculateDistance(Point p1, Point p2)
+        {
+            double dx = p2.X - p1.X;
+            double dy = p2.Y - p1.Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
     }
 
     interface IModelObject
@@ -525,7 +558,7 @@ namespace dIplom3
 
         public void Draw(Graphics g, int cellSide)
         {
-            Pen pen = Selected ? Pens.Red : Pens.Black;
+            Pen pen = Selected ? new Pen(Color.Red, 2) : new Pen(Color.Black, 2);
             DrawLength(g, cellSide);
             g.DrawLine(pen, startPoint.Value, endPoint.Value);
             
@@ -671,7 +704,7 @@ namespace dIplom3
     {
         public override void Draw(Graphics g)
         {
-            Pen pen = Selected ? new Pen(Color.Red, 1) : new Pen(Color.Brown, 1);
+            Pen pen = Selected ? new Pen(Color.Red, 2) : new Pen(Color.Brown, 2);
             g.DrawLine(pen, startPoint.Value, endPoint.Value);
         }
         public Door(Point? startPoint, Point? endPoint, LineType type): base(startPoint, endPoint, type)
@@ -684,7 +717,7 @@ namespace dIplom3
     {
         public override void Draw(Graphics g)
         {
-            Pen pen = Selected ? new Pen(Color.Red, 1) : new Pen(Color.Blue, 1);
+            Pen pen = Selected ? new Pen(Color.Red, 2) : new Pen(Color.Blue, 2);
             g.DrawLine(pen, startPoint.Value, endPoint.Value);
         }
         public Window(Point? startPoint, Point? endPoint, LineType type) : base(startPoint, endPoint, type)       
@@ -695,19 +728,34 @@ namespace dIplom3
 
     public class InteriorObject
     {
-        private List<Point> referancePoints;
+        public List<Point> referancePoints { get; private set; }
+        public InteriorObject()
+        {
+            referancePoints = new List<Point>();
+        }
+
+        private bool isCompleted => referancePoints.First() == referancePoints.Last() && referancePoints.Count > 1;
+
         public void AddReferancePoint(Point newPoint)
         {
             referancePoints.Add(newPoint);
         }
         public void Draw(Graphics g)
         {
-            Pen pen = new Pen(Color.Purple, 2);
-            g.DrawPolygon(pen, referancePoints.ToArray());
-            if (referancePoints.First() == referancePoints.Last())
+            Pen pen = new Pen(Color.Purple, 1);
+            
+            if (isCompleted)
             {
+                g.DrawPolygon(pen, referancePoints.ToArray());
                 Brush brush = new HatchBrush(HatchStyle.Cross, Color.Purple, Color.Transparent);
-                g.FillPolygon(brush, referancePoints.ToArray());
+                g.FillPolygon(brush, referancePoints.ToArray());  
+            }
+            else
+            {
+                for (int i = 0; i < referancePoints.Count - 1; i++) 
+                {
+                    g.DrawLine(pen, referancePoints[i], referancePoints[i + 1]);
+                }
             }
         }
     }
