@@ -4,23 +4,17 @@
 	</globalSettings>
 	<primitives>
 			<walls>
-					<wall startPoint="{X=85,Y=93}" endPoint="{X=315,Y=111}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=314,Y=113}" endPoint="{X=317,Y=202}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=317,Y=202}" endPoint="{X=58,Y=198}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=202,Y=54}" endPoint="{X=407,Y=69}" type="Straight">
-			
-			</wall>
-
+		
 		</walls>
 
 		<soundSources>
-					<soundSource name="soundSource0" diameter="10" center="{X=130,Y=159}">
+					<soundSource name="soundSource0" diameter="10" center="{X=329,Y=258}">
+			
+			</soundSource>
+			<soundSource name="soundSource1" diameter="10" center="{X=405,Y=312}">
+			
+			</soundSource>
+			<soundSource name="soundSource2" diameter="10" center="{X=226,Y=282}">
 			
 			</soundSource>
 

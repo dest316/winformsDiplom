@@ -4,14 +4,17 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
 
 namespace dIplom3
 {
@@ -71,6 +74,12 @@ namespace dIplom3
             (sender as Button).BackColor = Color.Red;
         }
 
+        private void doorButton_Click(object sender, EventArgs e)
+        {
+            ResetToolsBackColor();
+            activeTool = sender as Control;
+        }
+
         private void canvasPaint(object sender, PaintEventArgs e)
         {
             CreateMash(e.Graphics, 1);
@@ -81,6 +90,10 @@ namespace dIplom3
             foreach (var source in soundSources)
             {
                 source.Draw(e.Graphics);
+            }
+            foreach (var door in doors)
+            {
+                door.Draw(e.Graphics);
             }
         }
 
@@ -188,9 +201,48 @@ namespace dIplom3
                     soundSources.Add(new SoundSource(e.Location, $"soundSource{soundSources.Count}"));
                 }
             }
-            else if (activeTool != null && activeTool.Equals(doorButton))
+            else if (activeTool != null && (activeTool.Equals(doorButton) || activeTool.Equals(windowButton)))
             {
-
+                if (previousPoint is null)
+                {
+                    previousPoint = e.Location;
+                }
+                else
+                {
+                    using (Graphics g = canvas.CreateGraphics())
+                    {
+                        Point finishPoint = e.Location;
+                        if (Control.ModifierKeys == Keys.Shift)
+                        {
+                            string leanableAxis = Math.Abs(previousPoint.Value.X - e.Location.X) <= Math.Abs(previousPoint.Value.Y - e.Location.Y) ? "x" : "y";
+                            finishPoint = leanableAxis == "x" ? new Point(previousPoint.Value.X, e.Location.Y) : new Point(e.Location.X, previousPoint.Value.Y);
+                        }
+                        else
+                        {
+                            foreach (var wall in lines)
+                            {
+                                if (wall is Line && (wall as Line).type == LineType.Straight && wall.HitTest(previousPoint.Value) && wall.HitTest(finishPoint)) 
+                                {                
+                                    previousPoint = (wall as Line).GetNearestPoint(previousPoint.Value);
+                                    finishPoint = (wall as Line).GetNearestPoint(finishPoint);
+                                    break;
+                                }
+                            }
+                        }
+                        if (activeTool.Equals(doorButton))
+                        {
+                            g.DrawLine(Pens.Brown, previousPoint.Value, finishPoint);
+                            doors.Add(new Door(previousPoint, finishPoint, LineType.Straight));
+                        }
+                        else
+                        {
+                            g.DrawLine(Pens.Blue, previousPoint.Value, finishPoint);
+                            doors.Add(new Window(previousPoint, finishPoint, LineType.Straight));
+                        }
+                        canvas.Invalidate();
+                        previousPoint = null;
+                    }
+                }
             }
             else if (activeTool != null && activeTool.Equals(windowButton))
             {
@@ -391,6 +443,8 @@ namespace dIplom3
                 g.DrawString((++label * scaleCoeff).ToString(), new Font("Arial", 10), Brushes.DarkGray, new PointF(10, i + cellSide));
             }
         }
+
+        
     }
 
     interface IModelObject
@@ -403,9 +457,9 @@ namespace dIplom3
     }
     public class Line: IModelObject
     {
-        private Point? startPoint;
-        private Point? endPoint;
-        private LineType type;
+        protected Point? startPoint;
+        protected Point? endPoint;
+        public LineType type { get; set; }
         public bool Selected { get; set; } = false;
         public string MaterialName { get; set; } = "Не выбрано";
 
@@ -462,7 +516,7 @@ namespace dIplom3
             return null;
         }
 
-        private void DrawLength(Graphics g, int cellSide)
+        protected void DrawLength(Graphics g, int cellSide)
         {
             PointF center = new PointF(Math.Abs(endPoint.Value.X + startPoint.Value.X) / 2, Math.Abs(endPoint.Value.Y + startPoint.Value.Y) / 2);
             var length = Math.Round(Math.Sqrt(Math.Pow(endPoint.Value.X - startPoint.Value.X, 2) + Math.Pow(endPoint.Value.Y - startPoint.Value.Y, 2)) / cellSide, 3);
@@ -477,7 +531,7 @@ namespace dIplom3
             
         }
 
-        public void Draw(Graphics g)
+        public virtual void Draw(Graphics g)
         {
             Pen pen = Selected ? Pens.Red : Pens.Black;
             g.DrawLine(pen, startPoint.Value, endPoint.Value);
@@ -494,13 +548,29 @@ namespace dIplom3
             endPoint = referencePoints.Last();
         }
 
-        private Dictionary<string, string> GetParameters()
+        public Point GetNearestPoint(Point point)
+        {
+            float dx = endPoint.Value.X - startPoint.Value.X;
+            float dy = endPoint.Value.Y - startPoint.Value.Y;
+            if (dx == 0 && dy == 0)
+            {
+                return startPoint.Value;
+            }
+            float t = ((point.X - startPoint.Value.X) * dx + (point.Y - startPoint.Value.Y) * dy) / (dx * dx + dy * dy);
+            t = Math.Max(0, Math.Min(1, t));
+            float nearestX = startPoint.Value.X + t * dx;
+            float nearestY = startPoint.Value.Y + t * dy;
+            return new Point(Convert.ToInt32(nearestX), Convert.ToInt32(nearestY));
+        }
+
+        protected Dictionary<string, string> GetParameters()
         {
             var pars = new Dictionary<string, string>
             {
                 { "startPoint", this.startPoint.ToString() },
                 { "endPoint", this.endPoint.ToString() },
                 { "type", this.type.ToString() },
+                { "matreial", this.MaterialName.ToString() },
             };
             return pars;
         }
@@ -510,11 +580,13 @@ namespace dIplom3
             return serializer.createXmlTag("wall", GetParameters(), "", amountTab);
         }
     }
+
     public enum LineType
     {
         Straight,
         Curve
     }
+
     public class SoundSource: IModelObject
     {
         public bool Selected { get; set; } = false;
@@ -592,6 +664,51 @@ namespace dIplom3
         public string ConvertToXmlTag(Serializer serializer, int amountTag)
         {
             return serializer.createXmlTag("soundSource", GetParameters(), $"{serializer.dictToString(parameters)}", amountTag);
+        }
+    }
+
+    public class Door: Line
+    {
+        public override void Draw(Graphics g)
+        {
+            Pen pen = Selected ? new Pen(Color.Red, 1) : new Pen(Color.Brown, 1);
+            g.DrawLine(pen, startPoint.Value, endPoint.Value);
+        }
+        public Door(Point? startPoint, Point? endPoint, LineType type): base(startPoint, endPoint, type)
+        {
+            
+        }
+    }
+
+    public class Window: Line
+    {
+        public override void Draw(Graphics g)
+        {
+            Pen pen = Selected ? new Pen(Color.Red, 1) : new Pen(Color.Blue, 1);
+            g.DrawLine(pen, startPoint.Value, endPoint.Value);
+        }
+        public Window(Point? startPoint, Point? endPoint, LineType type) : base(startPoint, endPoint, type)       
+        {
+            
+        }
+    }
+
+    public class InteriorObject
+    {
+        private List<Point> referancePoints;
+        public void AddReferancePoint(Point newPoint)
+        {
+            referancePoints.Add(newPoint);
+        }
+        public void Draw(Graphics g)
+        {
+            Pen pen = new Pen(Color.Purple, 2);
+            g.DrawPolygon(pen, referancePoints.ToArray());
+            if (referancePoints.First() == referancePoints.Last())
+            {
+                Brush brush = new HatchBrush(HatchStyle.Cross, Color.Purple, Color.Transparent);
+                g.FillPolygon(brush, referancePoints.ToArray());
+            }
         }
     }
 }

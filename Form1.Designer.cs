@@ -29,6 +29,9 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.interierObjectButton = new System.Windows.Forms.Button();
+            this.doorButton = new System.Windows.Forms.Button();
+            this.windowButton = new System.Windows.Forms.Button();
             this.cursorButton = new System.Windows.Forms.Button();
             this.soundSourceButton = new System.Windows.Forms.Button();
             this.wallButton = new System.Windows.Forms.Button();
@@ -37,10 +40,7 @@
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.windowButton = new System.Windows.Forms.Button();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.doorButton = new System.Windows.Forms.Button();
-            this.interierObjectButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -58,6 +58,35 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(98, 435);
             this.panel1.TabIndex = 0;
+            // 
+            // interierObjectButton
+            // 
+            this.interierObjectButton.Location = new System.Drawing.Point(1, 316);
+            this.interierObjectButton.Name = "interierObjectButton";
+            this.interierObjectButton.Size = new System.Drawing.Size(94, 57);
+            this.interierObjectButton.TabIndex = 5;
+            this.interierObjectButton.Text = "Интерьер";
+            this.interierObjectButton.UseVisualStyleBackColor = true;
+            // 
+            // doorButton
+            // 
+            this.doorButton.Location = new System.Drawing.Point(1, 253);
+            this.doorButton.Name = "doorButton";
+            this.doorButton.Size = new System.Drawing.Size(94, 57);
+            this.doorButton.TabIndex = 4;
+            this.doorButton.Text = "Дверь";
+            this.doorButton.UseVisualStyleBackColor = true;
+            this.doorButton.Click += new System.EventHandler(this.wallButtonClick);
+            // 
+            // windowButton
+            // 
+            this.windowButton.Location = new System.Drawing.Point(1, 189);
+            this.windowButton.Name = "windowButton";
+            this.windowButton.Size = new System.Drawing.Size(94, 57);
+            this.windowButton.TabIndex = 3;
+            this.windowButton.Text = "Окно";
+            this.windowButton.UseVisualStyleBackColor = true;
+            this.windowButton.Click += new System.EventHandler(this.wallButtonClick);
             // 
             // cursorButton
             // 
@@ -114,14 +143,14 @@
             // importToolStripMenuItem
             // 
             this.importToolStripMenuItem.Name = "importToolStripMenuItem";
-            this.importToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.importToolStripMenuItem.Size = new System.Drawing.Size(157, 26);
             this.importToolStripMenuItem.Text = "Импорт...";
             this.importToolStripMenuItem.Click += new System.EventHandler(this.importToolStripMenuItem_Click);
             // 
             // exportToolStripMenuItem
             // 
             this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
-            this.exportToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.exportToolStripMenuItem.Size = new System.Drawing.Size(157, 26);
             this.exportToolStripMenuItem.Text = "Экспорт...";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
             // 
@@ -137,38 +166,11 @@
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // windowButton
-            // 
-            this.windowButton.Location = new System.Drawing.Point(1, 189);
-            this.windowButton.Name = "windowButton";
-            this.windowButton.Size = new System.Drawing.Size(94, 57);
-            this.windowButton.TabIndex = 3;
-            this.windowButton.Text = "Окно";
-            this.windowButton.UseVisualStyleBackColor = true;
-            // 
             // настройкиToolStripMenuItem
             // 
             this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(98, 26);
+            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(98, 24);
             this.настройкиToolStripMenuItem.Text = "Настройки";
-            // 
-            // doorButton
-            // 
-            this.doorButton.Location = new System.Drawing.Point(1, 253);
-            this.doorButton.Name = "doorButton";
-            this.doorButton.Size = new System.Drawing.Size(94, 57);
-            this.doorButton.TabIndex = 4;
-            this.doorButton.Text = "Дверь";
-            this.doorButton.UseVisualStyleBackColor = true;
-            // 
-            // interierObjectButton
-            // 
-            this.interierObjectButton.Location = new System.Drawing.Point(1, 316);
-            this.interierObjectButton.Name = "interierObjectButton";
-            this.interierObjectButton.Size = new System.Drawing.Size(94, 57);
-            this.interierObjectButton.TabIndex = 5;
-            this.interierObjectButton.Text = "Интерьер";
-            this.interierObjectButton.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
