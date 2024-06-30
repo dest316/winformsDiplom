@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.interierObjectButton = new System.Windows.Forms.Button();
+            this.interiorObjectButton = new System.Windows.Forms.Button();
             this.doorButton = new System.Windows.Forms.Button();
             this.windowButton = new System.Windows.Forms.Button();
             this.cursorButton = new System.Windows.Forms.Button();
@@ -48,7 +48,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.interierObjectButton);
+            this.panel1.Controls.Add(this.interiorObjectButton);
             this.panel1.Controls.Add(this.doorButton);
             this.panel1.Controls.Add(this.windowButton);
             this.panel1.Controls.Add(this.cursorButton);
@@ -59,15 +59,15 @@
             this.panel1.Size = new System.Drawing.Size(98, 435);
             this.panel1.TabIndex = 0;
             // 
-            // interierObjectButton
+            // interiorObjectButton
             // 
-            this.interierObjectButton.Location = new System.Drawing.Point(1, 316);
-            this.interierObjectButton.Name = "interierObjectButton";
-            this.interierObjectButton.Size = new System.Drawing.Size(94, 57);
-            this.interierObjectButton.TabIndex = 5;
-            this.interierObjectButton.Text = "Интерьер";
-            this.interierObjectButton.UseVisualStyleBackColor = true;
-            this.interierObjectButton.Click += new System.EventHandler(this.wallButtonClick);
+            this.interiorObjectButton.Location = new System.Drawing.Point(1, 316);
+            this.interiorObjectButton.Name = "interiorObjectButton";
+            this.interiorObjectButton.Size = new System.Drawing.Size(94, 57);
+            this.interiorObjectButton.TabIndex = 5;
+            this.interiorObjectButton.Text = "Интерьер";
+            this.interiorObjectButton.UseVisualStyleBackColor = true;
+            this.interiorObjectButton.Click += new System.EventHandler(this.wallButtonClick);
             // 
             // doorButton
             // 
@@ -207,7 +207,7 @@
         private System.Windows.Forms.Button windowButton;
         private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
         private System.Windows.Forms.Button doorButton;
-        private System.Windows.Forms.Button interierObjectButton;
+        private System.Windows.Forms.Button interiorObjectButton;
     }
 }
 

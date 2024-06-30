@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.IO;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace dIplom3
 {
@@ -52,10 +53,12 @@ namespace dIplom3
         }
         public Point stringToPoint(string str)
         {
-            str = str.Trim('{', '}');
+            Debug.WriteLine(str);
+            str = str.Trim('{', '}', ' ', '\t', '\n');
             string[] parts = str.Split(',', '=');
             int x = 0;
             int y = 0;
+            
             if (parts.Length == 4)
             {
                 if (int.TryParse(parts[1], out x) && int.TryParse(parts[3], out y))
@@ -63,6 +66,7 @@ namespace dIplom3
                     return new Point(x, y);
                 }
             }
+            Debug.WriteLine(str);
             throw new FormatException("Неверный формат строки для преобразования в точку");
         }
         public Dictionary<string, string> stringToParametersDict(string str)

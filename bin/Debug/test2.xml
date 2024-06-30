@@ -4,35 +4,51 @@
 	</globalSettings>
 	<primitives>
 			<walls>
-					<wall startPoint="{X=85,Y=93}" endPoint="{X=315,Y=111}" type="Straight">
+					<wall startPoint="{X=255,Y=236}" endPoint="{X=682,Y=236}" type="Straight" material="Не выбрано">
 			
 			</wall>
-			<wall startPoint="{X=314,Y=113}" endPoint="{X=317,Y=202}" type="Straight">
+			<wall startPoint="{X=682,Y=236}" endPoint="{X=682,Y=439}" type="Straight" material="Не выбрано">
 			
 			</wall>
-			<wall startPoint="{X=317,Y=202}" endPoint="{X=58,Y=198}" type="Straight">
+			<wall startPoint="{X=682,Y=439}" endPoint="{X=261,Y=439}" type="Straight" material="Не выбрано">
+			
+			</wall>
+			<wall startPoint="{X=261,Y=439}" endPoint="{X=261,Y=236}" type="Straight" material="Не выбрано">
 			
 			</wall>
 
 		</walls>
 
 		<soundSources>
-					<soundSource name="soundSource0" diameter="10" center="{X=130,Y=159}">
-			
-			</soundSource>
-			<soundSource name="soundSource1" diameter="10" center="{X=245,Y=168}">
-			
-			
-			
-			
-			par1$val1;par2$val2
-			
-			
-			
+					<soundSource name="soundSource0" diameter="10" center="{X=624,Y=277}">
 			
 			</soundSource>
 
 		</soundSources>
+
+		<doors>
+					<door startPoint="{X=261,Y=309}" endPoint="{X=260,Y=351}">
+			
+			</door>
+
+		</doors>
+
+		<windows>
+					<window startPoint="{X=381,Y=236}" endPoint="{X=445,Y=236}">
+			
+			</window>
+
+		</windows>
+
+		<interiorObjects>
+					<interiorObject>
+			{X=380,Y=297};{X=525,Y=302};{X=525,Y=302};{X=524,Y=396};{X=388,Y=401};{X=380,Y=297}
+			</interiorObject>
+			<interiorObject>
+			{X=616,Y=369};{X=639,Y=374};{X=644,Y=390};{X=637,Y=406};{X=621,Y=410};{X=604,Y=402};{X=597,Y=377};{X=616,Y=369}
+			</interiorObject>
+
+		</interiorObjects>
 
 	</primitives>
 

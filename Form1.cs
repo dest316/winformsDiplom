@@ -26,7 +26,7 @@ namespace dIplom3
         private List<IModelObject> lines = new List<IModelObject>();
         private List<Line> doors = new List<Line>();
         private List<Line> windows = new List<Line>();
-        private List<InteriorObject> interierObjects = new List<InteriorObject>();
+        private List<InteriorObject> interiorObjects = new List<InteriorObject>();
         private List<SoundSource> soundSources = new List<SoundSource>();
         private List<IModelObject> selectedObjects = new List<IModelObject>();
         private bool isDragging = false;
@@ -102,7 +102,7 @@ namespace dIplom3
             {
                 window.Draw(e.Graphics);
             }
-            foreach (var interiorObject in interierObjects)
+            foreach (var interiorObject in interiorObjects)
             {
                 interiorObject.Draw(e.Graphics);
             }
@@ -147,7 +147,7 @@ namespace dIplom3
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    List<IModelObject> primitives = lines.Cast<IModelObject>().Concat(soundSources.Cast<IModelObject>()).Concat(doors.Cast<IModelObject>()).Concat(windows.Cast<IModelObject>()).Concat(interierObjects.Cast<IModelObject>()).ToList();                    
+                    List<IModelObject> primitives = lines.Cast<IModelObject>().Concat(soundSources.Cast<IModelObject>()).Concat(doors.Cast<IModelObject>()).Concat(windows.Cast<IModelObject>()).Concat(interiorObjects.Cast<IModelObject>()).ToList();                    
                     foreach (var primitive in primitives)
                     {
                         if (primitive.HitTest(e.Location) && !selectedObjects.Contains(primitive))
@@ -157,26 +157,12 @@ namespace dIplom3
                             canvas.Invalidate();
                             return;
                         }
-                    }
-                    //foreach (var source in soundSources)
-                    //{
-                    //    if (source.HitTest(e.Location) && !selectedObjects.Contains(source))
-                    //    {
-                    //        selectedObjects.Add(source);
-                    //        source.Selected = true;
-                    //        canvas.Invalidate();
-                    //        return;
-                    //    }
-                    //}
+                    }          
                     selectedObjects.Clear();
                     foreach (var primitive in primitives)
                     {
                         primitive.Selected = false;
-                    }
-                    //foreach (var source in soundSources)
-                    //{
-                    //    source.Selected = false;
-                    //}
+                    }                   
                     canvas.Invalidate();
                 }
                 else if (e.Button == MouseButtons.Right)
@@ -256,18 +242,16 @@ namespace dIplom3
                     }
                 }
             }
-            else if (activeTool != null && activeTool.Equals(interierObjectButton))
+            else if (activeTool != null && activeTool.Equals(interiorObjectButton))
             {
                 if (lastInteriorObject is null)
                 {
                     lastInteriorObject = new InteriorObject();
                     lastInteriorObject.AddReferancePoint(e.Location);
-                    interierObjects.Add(lastInteriorObject);
+                    interiorObjects.Add(lastInteriorObject);
                 }
                 else
-                {
-                    
-                    
+                { 
                     Point newPoint = e.Location;
                     if (CalculateDistance(lastInteriorObject.referencePoints.First(), newPoint) < 5)
                     {
@@ -280,8 +264,6 @@ namespace dIplom3
                     {
                         lastInteriorObject = null;
                     }
-                    
-                    
                 }
             }
         }
@@ -377,6 +359,7 @@ namespace dIplom3
                             foreach (XmlNode wall in wallNodes)
                             {
                                 Point startPoint = serializer.stringToPoint(wall.Attributes["startPoint"].Value);
+                                string material = wall.Attributes["material"].Value;
                                 Point endPoint = serializer.stringToPoint(wall.Attributes["endPoint"].Value);
                                 lines.Add(new Line(startPoint, endPoint, LineType.Straight));
                             }
@@ -393,12 +376,41 @@ namespace dIplom3
                                 soundSources.Add(new SoundSource(center, diameter, name, parameters));
                             }
                         }
+                        XmlNodeList doorNodes = doc.SelectNodes("//doors/door");
+                        if (doorNodes != null)
+                        {
+                            foreach (XmlNode door in doorNodes)
+                            {
+                                Point startPoint = serializer.stringToPoint(door.Attributes["startPoint"].Value);
+                                Point endPoint = serializer.stringToPoint(door.Attributes["endPoint"].Value);
+                                doors.Add(new Door(startPoint, endPoint, LineType.Straight));
+                            }
+                        }
+                        XmlNodeList windowNodes = doc.SelectNodes("//windows/window");
+                        if (windowNodes != null)
+                        {
+                            foreach (XmlNode window in windowNodes)
+                            {
+                                Point startPoint = serializer.stringToPoint(window.Attributes["startPoint"].Value);
+                                Point endPoint = serializer.stringToPoint(window.Attributes["endPoint"].Value);
+                                windows.Add(new Window(startPoint, endPoint, LineType.Straight));
+                            }
+                        }
+                        XmlNodeList interiorObjectNodes = doc.SelectNodes("//interiorObjects/interiorObject");
+                        if (interiorObjectNodes != null)
+                        {
+                            foreach (XmlNode interiorObject in interiorObjectNodes)
+                            {
+                                interiorObjects.Add(new InteriorObject(interiorObject.InnerText.Split(';').Select(x => serializer.stringToPoint(x)).ToList()));
+                            }
+                        }
                         canvas.Invalidate();
                         MessageBox.Show($"Модель импортирована из файла {filePath}", "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show($"Ошибка при загрузке файла {filePath}", "Доступ запрещен", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Debug.WriteLine(ex.Message);
                     }
                 }
             }          
@@ -423,8 +435,8 @@ namespace dIplom3
                         string previousFileContent = File.ReadAllText(filePath);
                         int insertPosition = previousFileContent.IndexOf("</globalSettings>");
                         insertPosition += "</globalSettings>".Length;
-                        string wallsString = "";
-                        string sourcesString = "";
+                        string wallsString = ""; string doorsString = ""; string windowsString = "";
+                        string sourcesString = ""; string interiorObjectsString = "";
                         foreach (var wall in lines)
                         {
                             wallsString += (wall as Line).ConvertToXmlTag(serializer, 3);
@@ -433,7 +445,19 @@ namespace dIplom3
                         {
                             sourcesString += source.ConvertToXmlTag(serializer, 3);
                         }
-                        string body = '\n' + serializer.createXmlTag("primitives", null, $"{serializer.createXmlTag("walls", null, wallsString, 2)}\n{serializer.createXmlTag("soundSources", null, sourcesString, 2)}", 1);
+                        foreach (var door in doors)
+                        {
+                            doorsString += door.ConvertToXmlTag(serializer, 3);
+                        }
+                        foreach (var window in windows)
+                        {
+                            windowsString += window.ConvertToXmlTag(serializer, 3);
+                        }
+                        foreach (var interiorObject in interiorObjects)
+                        {
+                            interiorObjectsString += interiorObject.ConvertToXmlTag(serializer, 3);
+                        }
+                        string body = '\n' + serializer.createXmlTag("primitives", null, $"{serializer.createXmlTag("walls", null, wallsString, 2)}\n{serializer.createXmlTag("soundSources", null, sourcesString, 2)}\n{serializer.createXmlTag("doors", null, doorsString, 2)}\n{serializer.createXmlTag("windows", null, windowsString, 2)}\n{serializer.createXmlTag("interiorObjects", null, interiorObjectsString, 2)}", 1);
                         string newContentFile = previousFileContent.Insert(insertPosition, body);
                         serializer.Serialize(filePath, newContentFile);
 
@@ -489,6 +513,7 @@ namespace dIplom3
         bool HitTest(Point point);
         List<Point> GetReferencePoints();
         void SetReferencePoints(List<Point> referencePoints);
+        string ConvertToXmlTag(Serializer serializer, int amountTab);
     }
     public class Line: IModelObject
     {
@@ -598,19 +623,19 @@ namespace dIplom3
             return new Point(Convert.ToInt32(nearestX), Convert.ToInt32(nearestY));
         }
 
-        protected Dictionary<string, string> GetParameters()
+        protected virtual Dictionary<string, string> GetParameters()
         {
             var pars = new Dictionary<string, string>
             {
                 { "startPoint", this.startPoint.ToString() },
                 { "endPoint", this.endPoint.ToString() },
                 { "type", this.type.ToString() },
-                { "matreial", this.MaterialName.ToString() },
+                { "material", this.MaterialName.ToString() },
             };
             return pars;
         }
 
-        public string ConvertToXmlTag(Serializer serializer, int amountTab)
+        public virtual string ConvertToXmlTag(Serializer serializer, int amountTab)
         {
             return serializer.createXmlTag("wall", GetParameters(), "", amountTab);
         }
@@ -713,6 +738,19 @@ namespace dIplom3
         {
             
         }
+        protected override Dictionary<string, string> GetParameters()
+        {
+            var pars = new Dictionary<string, string>
+            {
+                {"startPoint", this.startPoint.ToString()},
+                {"endPoint", this.endPoint.ToString()},
+            };
+            return pars;
+        }
+        public override string ConvertToXmlTag(Serializer serializer, int amountTab)
+        {
+            return serializer.createXmlTag("door", GetParameters(), "", amountTab);
+        }
     }
 
     public class Window: Line
@@ -726,6 +764,19 @@ namespace dIplom3
         {
             
         }
+        protected override Dictionary<string, string> GetParameters()
+        {
+            var pars = new Dictionary<string, string>
+            {
+                {"startPoint", this.startPoint.ToString()},
+                {"endPoint", this.endPoint.ToString()},
+            };
+            return pars;
+        }
+        public override string ConvertToXmlTag(Serializer serializer, int amountTab)
+        {
+            return serializer.createXmlTag("window", GetParameters(), "", amountTab);
+        }
     }
 
     public class InteriorObject: IModelObject
@@ -734,6 +785,10 @@ namespace dIplom3
         public InteriorObject()
         {
             referencePoints = new List<Point>();
+        }
+        public InteriorObject(List<Point> points)
+        {
+            SetReferencePoints(points);
         }
 
         private bool isCompleted => referencePoints.First() == referencePoints.Last() && referencePoints.Count > 1;
@@ -786,6 +841,8 @@ namespace dIplom3
             return result;
         }
 
+        
+
         public List<Point> GetReferencePoints()
         {
             return referencePoints;
@@ -794,6 +851,11 @@ namespace dIplom3
         public void SetReferencePoints(List<Point> referencePoints)
         {
             this.referencePoints = referencePoints;
+        }
+
+        public string ConvertToXmlTag(Serializer serializer, int amountTab)
+        {
+            return serializer.createXmlTag("interiorObject", null, $"{String.Join(";", GetReferencePoints())}", amountTab);
         }
     }
 }
