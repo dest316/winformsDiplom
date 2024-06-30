@@ -49,16 +49,17 @@ namespace dIplom3
             catch (Exception ex)
             {
                 MessageBox.Show($"Не удалось установить соединение с базой данных. Сообщение об ошибке: {ex.Message}");
+                materialsInfo = new DataTable();
+                materialsInfo.Columns.Add("material_name", typeof(string));
+                materialsInfo.Rows.Add("Бетон");
+                materialsInfo.Rows.Add("Кирпич");
+                materialsInfo.Rows.Add("Дерево");
             }
             cellSide = Math.Min(canvas.Width, canvas.Height) / 10;
             canvas.MouseClick += canvasClick;
             canvas.Paint += canvasPaint;
             cursorButton.KeyDown += Form1_KeyDown;
-            materialsInfo = new DataTable();
-            materialsInfo.Columns.Add("material_name", typeof(string));
-            materialsInfo.Rows.Add("Бетон");
-            materialsInfo.Rows.Add("Кирпич");
-            materialsInfo.Rows.Add("Дерево");
+            
         }
 
         private void ResetToolsBackColor()
@@ -146,35 +147,36 @@ namespace dIplom3
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    foreach (var line in lines)
+                    List<IModelObject> primitives = lines.Cast<IModelObject>().Concat(soundSources.Cast<IModelObject>()).Concat(doors.Cast<IModelObject>()).Concat(windows.Cast<IModelObject>()).Concat(interierObjects.Cast<IModelObject>()).ToList();                    
+                    foreach (var primitive in primitives)
                     {
-                        if (line.HitTest(e.Location) && !selectedObjects.Contains(line))
+                        if (primitive.HitTest(e.Location) && !selectedObjects.Contains(primitive))
                         {
-                            selectedObjects.Add(line);
-                            line.Selected = true;
+                            selectedObjects.Add(primitive);
+                            primitive.Selected = true;
                             canvas.Invalidate();
                             return;
                         }
                     }
-                    foreach (var source in soundSources)
-                    {
-                        if (source.HitTest(e.Location) && !selectedObjects.Contains(source))
-                        {
-                            selectedObjects.Add(source);
-                            source.Selected = true;
-                            canvas.Invalidate();
-                            return;
-                        }
-                    }
+                    //foreach (var source in soundSources)
+                    //{
+                    //    if (source.HitTest(e.Location) && !selectedObjects.Contains(source))
+                    //    {
+                    //        selectedObjects.Add(source);
+                    //        source.Selected = true;
+                    //        canvas.Invalidate();
+                    //        return;
+                    //    }
+                    //}
                     selectedObjects.Clear();
-                    foreach (var line in lines)
+                    foreach (var primitive in primitives)
                     {
-                        line.Selected = false;
+                        primitive.Selected = false;
                     }
-                    foreach (var source in soundSources)
-                    {
-                        source.Selected = false;
-                    }
+                    //foreach (var source in soundSources)
+                    //{
+                    //    source.Selected = false;
+                    //}
                     canvas.Invalidate();
                 }
                 else if (e.Button == MouseButtons.Right)
@@ -267,14 +269,14 @@ namespace dIplom3
                     
                     
                     Point newPoint = e.Location;
-                    if (CalculateDistance(lastInteriorObject.referancePoints.First(), newPoint) < 5)
+                    if (CalculateDistance(lastInteriorObject.referencePoints.First(), newPoint) < 5)
                     {
-                        newPoint = lastInteriorObject.referancePoints.First();
+                        newPoint = lastInteriorObject.referencePoints.First();
                     }
                     lastInteriorObject.AddReferancePoint(newPoint);
                         
                     canvas.Invalidate();
-                    if (lastInteriorObject.referancePoints.First() == lastInteriorObject.referancePoints.Last())
+                    if (lastInteriorObject.referencePoints.First() == lastInteriorObject.referencePoints.Last())
                     {
                         lastInteriorObject = null;
                     }
@@ -726,37 +728,72 @@ namespace dIplom3
         }
     }
 
-    public class InteriorObject
+    public class InteriorObject: IModelObject
     {
-        public List<Point> referancePoints { get; private set; }
+        public List<Point> referencePoints { get; private set; }
         public InteriorObject()
         {
-            referancePoints = new List<Point>();
+            referencePoints = new List<Point>();
         }
 
-        private bool isCompleted => referancePoints.First() == referancePoints.Last() && referancePoints.Count > 1;
+        private bool isCompleted => referencePoints.First() == referencePoints.Last() && referencePoints.Count > 1;
+
+        public bool Selected { get; set; } = false;
 
         public void AddReferancePoint(Point newPoint)
         {
-            referancePoints.Add(newPoint);
+            referencePoints.Add(newPoint);
         }
         public void Draw(Graphics g)
         {
-            Pen pen = new Pen(Color.Purple, 1);
+            Pen pen = Selected ? new Pen(Color.Red, 1) : new Pen(Color.Purple, 1);
             
             if (isCompleted)
             {
-                g.DrawPolygon(pen, referancePoints.ToArray());
+                g.DrawPolygon(pen, referencePoints.ToArray());
                 Brush brush = new HatchBrush(HatchStyle.Cross, Color.Purple, Color.Transparent);
-                g.FillPolygon(brush, referancePoints.ToArray());  
+                g.FillPolygon(brush, referencePoints.ToArray());  
             }
             else
             {
-                for (int i = 0; i < referancePoints.Count - 1; i++) 
+                for (int i = 0; i < referencePoints.Count - 1; i++) 
                 {
-                    g.DrawLine(pen, referancePoints[i], referancePoints[i + 1]);
+                    g.DrawLine(pen, referencePoints[i], referencePoints[i + 1]);
                 }
             }
+        }
+
+        public bool HitTest(Point point)
+        {
+            if (!isCompleted)
+            {
+                return false;
+            }
+            int n = referencePoints.Count - 1;
+            bool result = false;
+            int j = n - 1;
+            for (int i = 0; i < n; i++)
+            {
+                if ((referencePoints[i].Y < point.Y && referencePoints[j].Y >= point.Y) || (referencePoints[j].Y < point.Y && referencePoints[i].Y >= point.Y))
+                {
+                    if (referencePoints[i].X + (point.Y - referencePoints[i].Y) / (double)(referencePoints[j].Y - referencePoints[i].Y) * (referencePoints[j].X - referencePoints[i].X) < point.X)
+                    {
+                        result = !result;
+                    }
+                }
+                j = i;
+            }
+            return result;
+        }
+
+        public List<Point> GetReferencePoints()
+        {
+            return referencePoints;
+        }
+
+        public void SetReferencePoints(List<Point> referencePoints)
+        {
+            this.referencePoints = referencePoints;
         }
     }
 }
