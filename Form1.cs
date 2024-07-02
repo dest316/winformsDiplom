@@ -138,6 +138,7 @@ namespace dIplom3
                         }
                         g.DrawLine(Pens.Black, previousPoint.Value, finishPoint);
                         lines.Add(new Line(previousPoint, finishPoint, LineType.Straight));
+                        ChangeClosedLabelState();
                         canvas.Invalidate();
                         previousPoint = null;
                     }
@@ -288,6 +289,9 @@ namespace dIplom3
             {
                 lines = lines.Where(x => !x.Selected).ToList();
                 soundSources = soundSources.Where(x => !x.Selected).ToList();
+                doors = doors.Where(x => !x.Selected).ToList();
+                windows = windows.Where(x => !x.Selected).ToList();
+                interiorObjects = interiorObjects.Where(x => !x.Selected).ToList();
                 selectedObjects.Clear();
                 canvas.Invalidate();
             }
@@ -295,6 +299,105 @@ namespace dIplom3
             {
                 Debug.WriteLine(selectedObjects.Count);
             }
+        }
+
+        private bool IsRoomClosed()
+        {
+            if (lines.Count < 3)
+            {
+                return false;
+            }
+            var largeComponents = FindLargeConnectedComponents();
+            var graph = BuildGraph();
+            foreach (var component in largeComponents)
+            {
+                if (IsComponentClosed(graph, component))
+                {
+                    Debug.WriteLine("Компонент не закрыт");
+                    return true;
+                }
+                
+                //foreach (var wall in lines)
+                //{
+                //    if (!PolygonHelper.IsPointInRoom(component, wall.GetReferencePoints().First()) || !PolygonHelper.IsPointInRoom(component, wall.GetReferencePoints().Last()))
+                //    {
+                //        Debug.WriteLine("Точка вышла за край");
+                //        return false;
+                //    }
+                //}
+                
+            }
+            return false;
+        }
+        //Пока помещение считается замкнутым только если у компонента начальная точка равна конечной
+        //На практике это не всегда так. Необходимо доработать.
+        private bool IsComponentClosed(Dictionary<Point, List<Point>> graph, List<Point> component)
+        {
+            foreach (var point in component)
+            {
+                if (graph[point].Count % 2 != 0)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private void ChangeClosedLabelState()
+        {
+            isClosedLabel.Text = IsRoomClosed() ? "Помещение замкнуто" : "Помещение не замкнуто"; 
+        }
+
+        private void DFS(Dictionary<Point, List<Point>> graph, Point current, HashSet<Point> visited, List<Point> component)
+        {
+            visited.Add(current);
+            component.Add(current);
+            foreach (var neighbor in graph[current])
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    DFS(graph, neighbor, visited, component);
+                }
+            }
+        }
+
+        private Dictionary<Point, List<Point>> BuildGraph()
+        {
+            Dictionary<Point, List<Point>> graph = new Dictionary<Point, List<Point>>();
+            foreach (var wall in lines)
+            {
+                if (!graph.ContainsKey(wall.GetReferencePoints().First()))
+                {
+                    graph[wall.GetReferencePoints().First()] = new List<Point>();
+                }
+                if (!graph.ContainsKey(wall.GetReferencePoints().Last()))
+                {
+                    graph[wall.GetReferencePoints().Last()] = new List<Point>();
+                }
+                graph[wall.GetReferencePoints().First()].Add(wall.GetReferencePoints().Last());
+                graph[wall.GetReferencePoints().Last()].Add(wall.GetReferencePoints().First());
+            }
+            return graph;
+        }
+
+        private List<List<Point>> FindLargeConnectedComponents()
+        {
+            Dictionary<Point, List<Point>> graph = BuildGraph();
+            HashSet<Point> visited = new HashSet<Point>();
+            List<List<Point>> largeComponents = new List<List<Point>>();
+            foreach (var point in graph.Keys)
+            {
+                if (!visited.Contains(point))
+                {
+                    List<Point> component = new List<Point>();
+                    DFS(graph, point, visited, component);
+                    if (component.Count > 3)
+                    {
+                        largeComponents.Add(component);
+                    }
+                }
+            }
+            return largeComponents;
         }
 
         private void canvasMouseDown(object sender, MouseEventArgs e)

@@ -53,7 +53,6 @@ namespace dIplom3
         }
         public Point stringToPoint(string str)
         {
-            Debug.WriteLine(str);
             str = str.Trim('{', '}', ' ', '\t', '\n');
             string[] parts = str.Split(',', '=');
             int x = 0;
@@ -66,7 +65,6 @@ namespace dIplom3
                     return new Point(x, y);
                 }
             }
-            Debug.WriteLine(str);
             throw new FormatException("Неверный формат строки для преобразования в точку");
         }
         public Dictionary<string, string> stringToParametersDict(string str)

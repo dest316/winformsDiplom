@@ -41,6 +41,7 @@
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.isClosedLabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.menuStrip1.SuspendLayout();
@@ -173,11 +174,25 @@
             this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(98, 24);
             this.настройкиToolStripMenuItem.Text = "Настройки";
             // 
+            // isClosedLabel
+            // 
+            this.isClosedLabel.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.isClosedLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.isClosedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
+            this.isClosedLabel.Location = new System.Drawing.Point(1053, 936);
+            this.isClosedLabel.Name = "isClosedLabel";
+            this.isClosedLabel.Padding = new System.Windows.Forms.Padding(3);
+            this.isClosedLabel.Size = new System.Drawing.Size(639, 49);
+            this.isClosedLabel.TabIndex = 3;
+            this.isClosedLabel.Text = "Помещение не замкнуто!";
+            this.isClosedLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1902, 1033);
+            this.Controls.Add(this.isClosedLabel);
             this.Controls.Add(this.canvas);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
@@ -208,6 +223,7 @@
         private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
         private System.Windows.Forms.Button doorButton;
         private System.Windows.Forms.Button interiorObjectButton;
+        private System.Windows.Forms.Label isClosedLabel;
     }
 }
 
