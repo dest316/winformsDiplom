@@ -3,57 +3,24 @@
 	
 	</globalSettings>
 	<primitives>
-			<walls>
-					<wall startPoint="{X=355,Y=568}" endPoint="{X=781,Y=568}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=781,Y=568}" endPoint="{X=781,Y=311}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=781,Y=311}" endPoint="{X=602,Y=311}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=355,Y=568}" endPoint="{X=355,Y=308}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=355,Y=308}" endPoint="{X=419,Y=308}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=355,Y=308}" endPoint="{X=355,Y=37}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=355,Y=37}" endPoint="{X=427,Y=37}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=427,Y=37}" endPoint="{X=427,Y=245}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=427,Y=245}" endPoint="{X=664,Y=245}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=781,Y=311}" endPoint="{X=781,Y=43}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=428,Y=71}" endPoint="{X=626,Y=71}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=626,Y=71}" endPoint="{X=626,Y=246}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=781,Y=43}" endPoint="{X=625,Y=43}" type="Straight">
-			
-			</wall>
-			<wall startPoint="{X=625,Y=43}" endPoint="{X=625,Y=71}" type="Straight">
-			
-			</wall>
-
+		<walls>
+			<wall startPoint="{X=355,Y=568}" endPoint="{X=781,Y=568}" type="Straight"></wall>
+			<wall startPoint="{X=781,Y=568}" endPoint="{X=781,Y=311}" type="Straight"></wall>
+			<wall startPoint="{X=781,Y=311}" endPoint="{X=602,Y=311}" type="Straight"></wall>
+			<wall startPoint="{X=355,Y=568}" endPoint="{X=355,Y=308}" type="Straight"></wall>
+			<wall startPoint="{X=355,Y=308}" endPoint="{X=419,Y=308}" type="Straight"></wall>
+			<wall startPoint="{X=355,Y=308}" endPoint="{X=355,Y=37}" type="Straight"></wall>
+			<wall startPoint="{X=355,Y=37}" endPoint="{X=427,Y=37}" type="Straight"></wall>
+			<wall startPoint="{X=427,Y=37}" endPoint="{X=427,Y=245}" type="Straight"></wall>
+			<wall startPoint="{X=427,Y=245}" endPoint="{X=664,Y=245}" type="Straight"></wall>
+			<wall startPoint="{X=781,Y=311}" endPoint="{X=781,Y=43}" type="Straight"></wall>
+			<wall startPoint="{X=428,Y=71}" endPoint="{X=626,Y=71}" type="Straight"></wall>
+			<wall startPoint="{X=626,Y=71}" endPoint="{X=626,Y=246}" type="Straight"></wall>
+			<wall startPoint="{X=781,Y=43}" endPoint="{X=625,Y=43}" type="Straight"></wall>
+			<wall startPoint="{X=625,Y=43}" endPoint="{X=625,Y=71}" type="Straight"></wall>
 		</walls>
-
 		<soundSources>
 		
 		</soundSources>
-
 	</primitives>
-
-
 </model>

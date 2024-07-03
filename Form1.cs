@@ -7,15 +7,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Reflection;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using static Google.Protobuf.Reflection.SourceCodeInfo.Types;
+using System.Configuration;
 
 namespace dIplom3
 {
@@ -34,17 +28,19 @@ namespace dIplom3
         private int cellSide;
         private DatabaseManager databaseManager;
         private DataTable materialsInfo;
+        internal DataTable acceptableTasks;
+        private DataTable acousticParameters;
         private InteriorObject lastInteriorObject = null;
+        
 
         public Form1()
         {
             InitializeComponent();
             try
             {
-                databaseManager = new DatabaseManager("localhost", "contester", "root", "root");
-                databaseManager.OpenConnection();
-                materialsInfo = databaseManager.ExecuteQuery("SELECT * FROM materials;");
-                databaseManager.CloseConnection();
+                string[] connectionString = ConfigurationManager.ConnectionStrings["db_connection"].ConnectionString.Split(';', '=');
+                Debug.WriteLine(connectionString.ToString());
+                ConnectToDatabase(connectionString[1], connectionString[3], connectionString[5], connectionString[7]);
             }
             catch (Exception ex)
             {
@@ -59,7 +55,16 @@ namespace dIplom3
             canvas.MouseClick += canvasClick;
             canvas.Paint += canvasPaint;
             cursorButton.KeyDown += Form1_KeyDown;
-            
+        }
+
+        internal void ConnectToDatabase(string server, string database, string username, string password)
+        {
+            databaseManager = new DatabaseManager(server, database, username, password);
+            databaseManager.OpenConnection();
+            materialsInfo = databaseManager.ExecuteQuery("SELECT * FROM materials WHERE target_plane_id = 2;");
+            acceptableTasks = databaseManager.ExecuteQuery("SELECT * FROM acceptable_tasks;");
+            acousticParameters = databaseManager.ExecuteQuery("SELECT * FROM acoustic_parameters");
+            databaseManager.CloseConnection();
         }
 
         private void ResetToolsBackColor()
@@ -606,6 +611,12 @@ namespace dIplom3
             double dx = p2.X - p1.X;
             double dy = p2.Y - p1.Y;
             return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsForm settings = new SettingsForm(this);
+            settings.ShowDialog();
         }
     }
 

@@ -42,3 +42,4 @@ C:\Users\sergm\source\repos\dIplom3\bin\Debug\System.Runtime.CompilerServices.Un
 C:\Users\sergm\source\repos\dIplom3\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.csproj.CopyComplete
 C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.WallEditForm.resources
+C:\Users\sergm\source\repos\dIplom3\obj\Debug\dIplom3.SettingsForm.resources

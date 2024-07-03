@@ -3,54 +3,33 @@
 	
 	</globalSettings>
 	<primitives>
-			<walls>
-					<wall startPoint="{X=255,Y=236}" endPoint="{X=682,Y=236}" type="Straight" material="Не выбрано">
-			
-			</wall>
-			<wall startPoint="{X=682,Y=236}" endPoint="{X=682,Y=439}" type="Straight" material="Не выбрано">
-			
-			</wall>
-			<wall startPoint="{X=682,Y=439}" endPoint="{X=261,Y=439}" type="Straight" material="Не выбрано">
-			
-			</wall>
-			<wall startPoint="{X=261,Y=439}" endPoint="{X=261,Y=236}" type="Straight" material="Не выбрано">
-			
-			</wall>
-
+		<walls>
+			<wall startPoint="{X=255,Y=236}" endPoint="{X=682,Y=236}" type="Straight" material="Не выбрано"></wall>
+			<wall startPoint="{X=682,Y=236}" endPoint="{X=682,Y=439}" type="Straight" material="Не выбрано"></wall>
+			<wall startPoint="{X=682,Y=439}" endPoint="{X=261,Y=439}" type="Straight" material="Не выбрано"></wall>
+			<wall startPoint="{X=261,Y=439}" endPoint="{X=261,Y=236}" type="Straight" material="Не выбрано"></wall>
 		</walls>
 
 		<soundSources>
-					<soundSource name="soundSource0" diameter="10" center="{X=624,Y=277}">
-			
-			</soundSource>
-
+			<soundSource name="soundSource0" diameter="10" center="{X=624,Y=277}"></soundSource>
 		</soundSources>
 
 		<doors>
-					<door startPoint="{X=261,Y=309}" endPoint="{X=260,Y=351}">
-			
-			</door>
-
+			<door startPoint="{X=261,Y=309}" endPoint="{X=260,Y=351}"></door>
 		</doors>
 
 		<windows>
-					<window startPoint="{X=381,Y=236}" endPoint="{X=445,Y=236}">
-			
-			</window>
+			<window startPoint="{X=381,Y=236}" endPoint="{X=445,Y=236}"></window>
 
 		</windows>
 
 		<interiorObjects>
-					<interiorObject>
-			{X=380,Y=297};{X=525,Y=302};{X=525,Y=302};{X=524,Y=396};{X=388,Y=401};{X=380,Y=297}
+			<interiorObject>
+				{X=380,Y=297};{X=525,Y=302};{X=525,Y=302};{X=524,Y=396};{X=388,Y=401};{X=380,Y=297}
 			</interiorObject>
 			<interiorObject>
-			{X=616,Y=369};{X=639,Y=374};{X=644,Y=390};{X=637,Y=406};{X=621,Y=410};{X=604,Y=402};{X=597,Y=377};{X=616,Y=369}
+				{X=616,Y=369};{X=639,Y=374};{X=644,Y=390};{X=637,Y=406};{X=621,Y=410};{X=604,Y=402};{X=597,Y=377};{X=616,Y=369}
 			</interiorObject>
-
 		</interiorObjects>
-
 	</primitives>
-
-
 </model>
