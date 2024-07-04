@@ -178,7 +178,7 @@ namespace dIplom3
                         if (source is SoundSource && source.HitTest(e.Location))
                         {
                             var tmpSource = source as SoundSource;
-                            var editForm = new SoundSourceEditForm(tmpSource.parameters, tmpSource.name);
+                            var editForm = new SoundSourceEditForm(acousticParameters, tmpSource.parameters, tmpSource.name);
                             editForm.ShowDialog();
                         }
                     }
@@ -202,7 +202,10 @@ namespace dIplom3
                     int diameter = SoundSource.STANDART_DIAMETER;
                     g.DrawEllipse(pen, e.Location.X - diameter / 2, e.Location.Y - diameter / 2, diameter, diameter);
                     g.FillEllipse(brush, e.Location.X - diameter / 2, e.Location.Y - diameter / 2, diameter, diameter);
-                    soundSources.Add(new SoundSource(e.Location, $"soundSource{soundSources.Count}"));
+                    Dictionary<string, string> dict = acousticParameters.AsEnumerable()
+                    .Select(row => row.Field<string>("parameter_name"))
+                    .ToDictionary(value => value, value => string.Empty);
+                    soundSources.Add(new SoundSource(e.Location, diameter, $"soundSource{soundSources.Count}", dict));
                 }
             }
             else if (activeTool != null && (activeTool.Equals(doorButton) || activeTool.Equals(windowButton)))

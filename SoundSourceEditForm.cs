@@ -13,79 +13,100 @@ namespace dIplom3
 {
     public partial class SoundSourceEditForm : Form
     {
-        private Dictionary<string, string> parameters;
+        private DataTable parameters;
         public string senderName {get; set;}
-        public SoundSourceEditForm(Dictionary<string, string> parameters, string senderName)
+        private Dictionary<string, string> currentParameters;
+        public SoundSourceEditForm(DataTable parameters, Dictionary<string, string> currentParameters, string senderName)
         {
             InitializeComponent();
-            this.KeyDown += SSEF_KeyDown;
+            
             this.parameters = parameters;
             this.senderName = senderName;
-            InitializeParamsTable(parameters);
+            this.currentParameters = currentParameters;
+            InitializeDataGridView();
         }
-        private void SSEF_KeyDown(object sender, KeyEventArgs e)
+        private void InitializeDataGridView()
         {
-            if (e.KeyCode == Keys.Delete)
+            var nameColumn = new DataGridViewTextBoxColumn();
+            nameColumn.Name = "ParameterName";
+            nameColumn.HeaderText = "Параметр";
+            nameColumn.ReadOnly = true;
+            soundParametersContainer.Columns.Add(nameColumn);
+
+            var valueColumn = new DataGridViewTextBoxColumn();
+            valueColumn.Name = "ParameterValue";
+            valueColumn.HeaderText = "Value";
+            soundParametersContainer.Columns.Add(valueColumn);
+
+            var unitColumn = new DataGridViewTextBoxColumn();
+            unitColumn.Name = "ParameterUnits";
+            unitColumn.HeaderText = "Единицы измерения";
+            unitColumn.ReadOnly = true;
+            soundParametersContainer.Columns.Add(unitColumn);
+            LoadParameters();
+        }
+
+        private void LoadParameters()
+        {
+            foreach (DataRow row in parameters.Rows)
             {
-                RemoveFocusedRowFromTable();
+                
+                if (!currentParameters.TryGetValue(row["parameter_name"].ToString(), out string value)) 
+                {
+                    value = "";
+                }
+                soundParametersContainer.Rows.Add(row["parameter_name"], value, row["parameter_units"]);
+
             }
         }
 
-        private void RemoveFocusedRowFromTable()
+        private void saveButton_Click(object sender, EventArgs e)
         {
-            Control focusedControl = this.ActiveControl;
-            if (focusedControl != null && focusedControl.Parent == paramsTable)
-            {
-                TableLayoutPanelCellPosition position = paramsTable.GetPositionFromControl(focusedControl);
-                int rowToDelete = position.Row;
-                parameters.Remove((paramsTable.GetControlFromPosition(0, rowToDelete) as Label).Text);
-                for (int column = paramsTable.ColumnCount; column >= 0; column--)
+            bool success = true;
+            foreach (DataGridViewRow row in soundParametersContainer.Rows)
+            {         
+                List<string> values = new List<string>();
+                foreach (DataGridViewCell cell in row.Cells)
                 {
-                    Control control = paramsTable.GetControlFromPosition(column, rowToDelete);
-                    if (control != null)
+                    values.Add(cell.Value?.ToString());
+                }
+                DataRow[] foundRows = parameters.Select($"parameter_name = '{values[0]}'");
+                string parameter_range = foundRows[0]["parameter_range"].ToString();
+                var range = parameter_range.Split(';').Select(x => x == "" ? null : x).ToList();
+                int? typed_value = null;
+                try
+                {
+                    typed_value = int.Parse(values[1]);
+                }
+                catch (FormatException ex)
+                {
+                    success = false;
+                }
+                if (range[0] != null)
+                {
+                    if (typed_value < int.Parse(range[0])) { success = false; }
+                }
+                if (range[1] != null)
+                {
+                    if (typed_value > int.Parse(range[1])) { success = false; }
+                }
+            }
+            if (success)
+            {
+                foreach (DataGridViewRow row in soundParametersContainer.Rows)
+                {
+                    List<string> values = new List<string>();
+                    foreach (DataGridViewCell cell in row.Cells)
                     {
-                        paramsTable.Controls.Remove(control);
+                        values.Add(cell.Value?.ToString());
                     }
+                    currentParameters[values[0]] = values[1];
                 }
             }
-        }
-
-        private void InitializeParamsTable(Dictionary<string, string> parameters) 
-        {
-            paramsTable.Controls.Clear();
-            foreach (var pair in parameters)
+            else
             {
-                Label label = new Label();
-                label.Text = pair.Key;
-                label.Location = new Point(10, 30 * paramsTable.RowCount);
-
-                TextBox textBox = new TextBox();
-                textBox.Text = pair.Value;
-                textBox.Location = new Point(150, 30 * paramsTable.RowCount);
-
-                paramsTable.Controls.Add(label);
-                paramsTable.Controls.Add(textBox);
-                paramsTable.RowCount++;
+                MessageBox.Show("Параметры были введены неверно");
             }
-        }
-
-        private void updateParametersButton_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < paramsTable.RowCount; i++)
-            {
-                if (paramsTable.GetControlFromPosition(0, i) != null)
-                {
-                    parameters[paramsTable.GetControlFromPosition(0, i).Text] = paramsTable.GetControlFromPosition(1, i).Text;
-                }
-            }
-            if (newParameterNameTextBox.Text != "" && newParameterValueTextBox.Text != "" && !parameters.ContainsKey(newParameterNameTextBox.Text))
-            {
-                parameters[newParameterNameTextBox.Text] = newParameterValueTextBox.Text;
-            }
-            newParameterNameTextBox.Clear();
-            newParameterValueTextBox.Clear();
-            InitializeParamsTable(parameters);
-            MessageBox.Show("Данные сохранены");
         }
     }
 }
