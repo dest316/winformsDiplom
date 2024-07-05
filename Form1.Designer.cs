@@ -62,7 +62,7 @@
             // 
             // interiorObjectButton
             // 
-            this.interiorObjectButton.Location = new System.Drawing.Point(1, 316);
+            this.interiorObjectButton.Location = new System.Drawing.Point(1, 252);
             this.interiorObjectButton.Name = "interiorObjectButton";
             this.interiorObjectButton.Size = new System.Drawing.Size(94, 57);
             this.interiorObjectButton.TabIndex = 5;
@@ -72,7 +72,7 @@
             // 
             // doorButton
             // 
-            this.doorButton.Location = new System.Drawing.Point(1, 253);
+            this.doorButton.Location = new System.Drawing.Point(1, 189);
             this.doorButton.Name = "doorButton";
             this.doorButton.Size = new System.Drawing.Size(94, 57);
             this.doorButton.TabIndex = 4;
@@ -82,7 +82,7 @@
             // 
             // windowButton
             // 
-            this.windowButton.Location = new System.Drawing.Point(1, 189);
+            this.windowButton.Location = new System.Drawing.Point(1, 126);
             this.windowButton.Name = "windowButton";
             this.windowButton.Size = new System.Drawing.Size(94, 57);
             this.windowButton.TabIndex = 3;
@@ -102,7 +102,7 @@
             // 
             // soundSourceButton
             // 
-            this.soundSourceButton.Location = new System.Drawing.Point(1, 63);
+            this.soundSourceButton.Location = new System.Drawing.Point(1, 315);
             this.soundSourceButton.Name = "soundSourceButton";
             this.soundSourceButton.Size = new System.Drawing.Size(94, 57);
             this.soundSourceButton.TabIndex = 2;
@@ -112,7 +112,7 @@
             // 
             // wallButton
             // 
-            this.wallButton.Location = new System.Drawing.Point(1, 126);
+            this.wallButton.Location = new System.Drawing.Point(1, 63);
             this.wallButton.Name = "wallButton";
             this.wallButton.Size = new System.Drawing.Size(94, 57);
             this.wallButton.TabIndex = 0;
@@ -139,7 +139,7 @@
             this.importToolStripMenuItem,
             this.exportToolStripMenuItem});
             this.модельToolStripMenuItem.Name = "модельToolStripMenuItem";
-            this.модельToolStripMenuItem.Size = new System.Drawing.Size(77, 26);
+            this.модельToolStripMenuItem.Size = new System.Drawing.Size(77, 24);
             this.модельToolStripMenuItem.Text = "Модель";
             // 
             // importToolStripMenuItem
@@ -179,14 +179,14 @@
             // 
             this.isClosedLabel.BackColor = System.Drawing.SystemColors.ControlLight;
             this.isClosedLabel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.isClosedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F);
-            this.isClosedLabel.Location = new System.Drawing.Point(1053, 936);
+            this.isClosedLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.isClosedLabel.Location = new System.Drawing.Point(1398, 916);
             this.isClosedLabel.Name = "isClosedLabel";
             this.isClosedLabel.Padding = new System.Windows.Forms.Padding(3);
-            this.isClosedLabel.Size = new System.Drawing.Size(639, 49);
+            this.isClosedLabel.Size = new System.Drawing.Size(294, 49);
             this.isClosedLabel.TabIndex = 3;
-            this.isClosedLabel.Text = "Помещение не замкнуто!";
-            this.isClosedLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.isClosedLabel.Text = "Помещение не замкнуто";
+            this.isClosedLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // Form1
             // 

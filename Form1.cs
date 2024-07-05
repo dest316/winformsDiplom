@@ -337,8 +337,7 @@ namespace dIplom3
             }
             return false;
         }
-        //Пока помещение считается замкнутым только если у компонента начальная точка равна конечной
-        //На практике это не всегда так. Необходимо доработать.
+        
         private bool IsComponentClosed(Dictionary<Point, List<Point>> graph, List<Point> component)
         {
             foreach (var point in component)
@@ -399,7 +398,7 @@ namespace dIplom3
                 {
                     List<Point> component = new List<Point>();
                     DFS(graph, point, visited, component);
-                    if (component.Count > 3)
+                    if (component.Count >= 3)
                     {
                         largeComponents.Add(component);
                     }
@@ -620,6 +619,19 @@ namespace dIplom3
         {
             SettingsForm settings = new SettingsForm(this);
             settings.ShowDialog();
+        }
+        internal void UpdateToolVisibility()
+        {
+            string task = ConfigurationManager.AppSettings["task"];
+            if (task != null && task == "Проектирование помещения")
+            {
+                soundSourceButton.Visible = false;
+            }
+            else
+            {
+                soundSourceButton.Visible = true;
+            }
+            
         }
     }
 

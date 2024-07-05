@@ -72,5 +72,9 @@ namespace dIplom3
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
         }
+        private void SettingsFormClosed(object sender, FormClosedEventArgs e)
+        {
+            parentForm.UpdateToolVisibility();
+        }
     }
 }

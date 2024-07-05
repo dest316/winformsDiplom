@@ -29,19 +29,19 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.localSaveButton = new System.Windows.Forms.Button();
+            this.connectButton = new System.Windows.Forms.Button();
+            this.passwordTextBox = new System.Windows.Forms.TextBox();
+            this.usernameTextBox = new System.Windows.Forms.TextBox();
+            this.databaseTextBox = new System.Windows.Forms.TextBox();
+            this.serverTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.serverTextBox = new System.Windows.Forms.TextBox();
-            this.databaseTextBox = new System.Windows.Forms.TextBox();
-            this.usernameTextBox = new System.Windows.Forms.TextBox();
-            this.passwordTextBox = new System.Windows.Forms.TextBox();
-            this.connectButton = new System.Windows.Forms.Button();
-            this.localSaveButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.tasksList = new System.Windows.Forms.ComboBox();
             this.saveTaskButton = new System.Windows.Forms.Button();
+            this.tasksList = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -65,6 +65,56 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Подключение к базе данных";
+            // 
+            // localSaveButton
+            // 
+            this.localSaveButton.Location = new System.Drawing.Point(169, 171);
+            this.localSaveButton.Name = "localSaveButton";
+            this.localSaveButton.Size = new System.Drawing.Size(182, 23);
+            this.localSaveButton.TabIndex = 9;
+            this.localSaveButton.Text = "Запомнить локально";
+            this.localSaveButton.UseVisualStyleBackColor = true;
+            this.localSaveButton.Click += new System.EventHandler(this.localSaveButton_Click);
+            // 
+            // connectButton
+            // 
+            this.connectButton.Location = new System.Drawing.Point(21, 171);
+            this.connectButton.Name = "connectButton";
+            this.connectButton.Size = new System.Drawing.Size(130, 23);
+            this.connectButton.TabIndex = 8;
+            this.connectButton.Text = "Подключиться";
+            this.connectButton.UseVisualStyleBackColor = true;
+            this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
+            // 
+            // passwordTextBox
+            // 
+            this.passwordTextBox.Location = new System.Drawing.Point(198, 131);
+            this.passwordTextBox.Name = "passwordTextBox";
+            this.passwordTextBox.PasswordChar = '*';
+            this.passwordTextBox.Size = new System.Drawing.Size(163, 22);
+            this.passwordTextBox.TabIndex = 7;
+            this.passwordTextBox.UseSystemPasswordChar = true;
+            // 
+            // usernameTextBox
+            // 
+            this.usernameTextBox.Location = new System.Drawing.Point(198, 101);
+            this.usernameTextBox.Name = "usernameTextBox";
+            this.usernameTextBox.Size = new System.Drawing.Size(163, 22);
+            this.usernameTextBox.TabIndex = 6;
+            // 
+            // databaseTextBox
+            // 
+            this.databaseTextBox.Location = new System.Drawing.Point(198, 71);
+            this.databaseTextBox.Name = "databaseTextBox";
+            this.databaseTextBox.Size = new System.Drawing.Size(163, 22);
+            this.databaseTextBox.TabIndex = 5;
+            // 
+            // serverTextBox
+            // 
+            this.serverTextBox.Location = new System.Drawing.Point(198, 41);
+            this.serverTextBox.Name = "serverTextBox";
+            this.serverTextBox.Size = new System.Drawing.Size(163, 22);
+            this.serverTextBox.TabIndex = 4;
             // 
             // label4
             // 
@@ -102,56 +152,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Сервер";
             // 
-            // serverTextBox
-            // 
-            this.serverTextBox.Location = new System.Drawing.Point(198, 41);
-            this.serverTextBox.Name = "serverTextBox";
-            this.serverTextBox.Size = new System.Drawing.Size(163, 22);
-            this.serverTextBox.TabIndex = 4;
-            // 
-            // databaseTextBox
-            // 
-            this.databaseTextBox.Location = new System.Drawing.Point(198, 71);
-            this.databaseTextBox.Name = "databaseTextBox";
-            this.databaseTextBox.Size = new System.Drawing.Size(163, 22);
-            this.databaseTextBox.TabIndex = 5;
-            // 
-            // usernameTextBox
-            // 
-            this.usernameTextBox.Location = new System.Drawing.Point(198, 101);
-            this.usernameTextBox.Name = "usernameTextBox";
-            this.usernameTextBox.Size = new System.Drawing.Size(163, 22);
-            this.usernameTextBox.TabIndex = 6;
-            // 
-            // passwordTextBox
-            // 
-            this.passwordTextBox.Location = new System.Drawing.Point(198, 131);
-            this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.PasswordChar = '*';
-            this.passwordTextBox.Size = new System.Drawing.Size(163, 22);
-            this.passwordTextBox.TabIndex = 7;
-            this.passwordTextBox.UseSystemPasswordChar = true;
-            // 
-            // connectButton
-            // 
-            this.connectButton.Location = new System.Drawing.Point(21, 171);
-            this.connectButton.Name = "connectButton";
-            this.connectButton.Size = new System.Drawing.Size(130, 23);
-            this.connectButton.TabIndex = 8;
-            this.connectButton.Text = "Подключиться";
-            this.connectButton.UseVisualStyleBackColor = true;
-            this.connectButton.Click += new System.EventHandler(this.connectButton_Click);
-            // 
-            // localSaveButton
-            // 
-            this.localSaveButton.Location = new System.Drawing.Point(169, 171);
-            this.localSaveButton.Name = "localSaveButton";
-            this.localSaveButton.Size = new System.Drawing.Size(182, 23);
-            this.localSaveButton.TabIndex = 9;
-            this.localSaveButton.Text = "Запомнить локально";
-            this.localSaveButton.UseVisualStyleBackColor = true;
-            this.localSaveButton.Click += new System.EventHandler(this.localSaveButton_Click);
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.saveTaskButton);
@@ -163,14 +163,6 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Выбор задачи";
             // 
-            // tasksList
-            // 
-            this.tasksList.FormattingEnabled = true;
-            this.tasksList.Location = new System.Drawing.Point(20, 32);
-            this.tasksList.Name = "tasksList";
-            this.tasksList.Size = new System.Drawing.Size(181, 24);
-            this.tasksList.TabIndex = 0;
-            // 
             // saveTaskButton
             // 
             this.saveTaskButton.Location = new System.Drawing.Point(20, 63);
@@ -181,6 +173,14 @@
             this.saveTaskButton.UseVisualStyleBackColor = true;
             this.saveTaskButton.Click += new System.EventHandler(this.saveTaskButton_Click);
             // 
+            // tasksList
+            // 
+            this.tasksList.FormattingEnabled = true;
+            this.tasksList.Location = new System.Drawing.Point(20, 32);
+            this.tasksList.Name = "tasksList";
+            this.tasksList.Size = new System.Drawing.Size(181, 24);
+            this.tasksList.TabIndex = 0;
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -190,6 +190,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "SettingsForm";
             this.Text = "Настройки";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SettingsFormClosed);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
